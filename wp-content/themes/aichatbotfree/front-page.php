@@ -1,15 +1,15 @@
 <?php
 get_header();
-$hero_subheading       = get_field( 'hero_subheading' );
-$cta_primary_label     = get_field( 'hero_cta_primary_label' );
-$cta_primary_url       = get_field( 'hero_cta_primary_url' );
-$cta_secondary_label   = get_field( 'hero_cta_secondary_label' );
-$cta_secondary_url     = get_field( 'hero_cta_secondary_url' );
-$pillar_articles       = get_field( 'pillar_articles' );
-$tool_highlight        = get_field( 'tool_highlight' );
-$free_comparison       = get_field( 'free_comparison' );
-$paid_comparison       = get_field( 'paid_comparison' );
-$trust_copy            = get_field( 'trust_copy' );
+$hero_subheading       = aichatbotfree_get_field( 'hero_subheading' );
+$cta_primary_label     = aichatbotfree_get_field( 'hero_cta_primary_label' );
+$cta_primary_url       = aichatbotfree_get_field( 'hero_cta_primary_url' );
+$cta_secondary_label   = aichatbotfree_get_field( 'hero_cta_secondary_label' );
+$cta_secondary_url     = aichatbotfree_get_field( 'hero_cta_secondary_url' );
+$pillar_articles       = aichatbotfree_get_field( 'pillar_articles' );
+$tool_highlight        = aichatbotfree_get_field( 'tool_highlight' );
+$free_comparison       = aichatbotfree_get_field( 'free_comparison' );
+$paid_comparison       = aichatbotfree_get_field( 'paid_comparison' );
+$trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 ?>
 <section class="hero">
     <div class="container hero-grid">
@@ -116,10 +116,10 @@ $trust_copy            = get_field( 'trust_copy' );
                     if ( $tool_highlight ) {
                         foreach ( $tool_highlight as $post ) {
                             setup_postdata( $post );
-                            $free_limits = get_field( 'free_limits', $post->ID );
-                            $channels    = get_field( 'supported_channels', $post->ID );
-                            $ai_support  = get_field( 'ai_support', $post->ID );
-                            $best_for    = get_field( 'best_for', $post->ID );
+                            $free_limits = aichatbotfree_get_field( 'free_limits', $post->ID );
+                            $channels    = aichatbotfree_get_field( 'supported_channels', $post->ID );
+                            $ai_support  = aichatbotfree_get_field( 'ai_support', $post->ID );
+                            $best_for    = aichatbotfree_get_field( 'best_for', $post->ID );
                             $review_url  = get_permalink( $post );
                             ?>
                             <tr>

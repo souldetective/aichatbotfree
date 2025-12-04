@@ -29,6 +29,33 @@ add_action( 'wp_enqueue_scripts', function () {
 });
 
 /**
+ * Safely retrieve ACF fields with sensible fallbacks when ACF is not active.
+ *
+ * @param string     $selector Field name or key.
+ * @param int|string $post_id  Optional post/context.
+ * @param mixed      $default  Default value when no data exists.
+ *
+ * @return mixed
+ */
+function aichatbotfree_get_field( $selector, $post_id = false, $default = null ) {
+    if ( function_exists( 'get_field' ) ) {
+        $value = get_field( $selector, $post_id );
+
+        return null !== $value ? $value : $default;
+    }
+
+    if ( $post_id ) {
+        $value = get_post_meta( $post_id, $selector, true );
+
+        if ( '' !== $value ) {
+            return $value;
+        }
+    }
+
+    return $default;
+}
+
+/**
  * Register Custom Post Type: chatbot_tool
  */
 add_action( 'init', function () {

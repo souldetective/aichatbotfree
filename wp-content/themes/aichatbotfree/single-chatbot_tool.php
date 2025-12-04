@@ -7,12 +7,12 @@
         <div class="entry-content"><?php the_content(); ?></div>
         <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; margin-top: 20px;">
             <?php
-            $pricing   = get_field( 'pricing' );
-            $free      = get_field( 'free_limits' );
-            $channels  = get_field( 'supported_channels' );
-            $ai        = get_field( 'ai_support' );
-            $best_for  = get_field( 'best_for' );
-            $affiliate = get_field( 'affiliate_url' );
+            $pricing   = aichatbotfree_get_field( 'pricing' );
+            $free      = aichatbotfree_get_field( 'free_limits' );
+            $channels  = aichatbotfree_get_field( 'supported_channels' );
+            $ai        = aichatbotfree_get_field( 'ai_support' );
+            $best_for  = aichatbotfree_get_field( 'best_for' );
+            $affiliate = aichatbotfree_get_field( 'affiliate_url' );
             $data      = [
                 __( 'Pricing (from /month)', 'aichatbotfree' ) => $pricing,
                 __( 'Free Plan Limits', 'aichatbotfree' ) => $free,
