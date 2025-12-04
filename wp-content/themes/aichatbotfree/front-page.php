@@ -1,25 +1,98 @@
 <?php
 get_header();
-$hero_subheading       = aichatbotfree_get_field( 'hero_subheading' );
-$cta_primary_label     = aichatbotfree_get_field( 'hero_cta_primary_label' );
-$cta_primary_url       = aichatbotfree_get_field( 'hero_cta_primary_url' );
-$cta_secondary_label   = aichatbotfree_get_field( 'hero_cta_secondary_label' );
-$cta_secondary_url     = aichatbotfree_get_field( 'hero_cta_secondary_url' );
-$pillar_articles       = aichatbotfree_get_field( 'pillar_articles' );
-$tool_highlight        = aichatbotfree_get_field( 'tool_highlight' );
-$free_comparison       = aichatbotfree_get_field( 'free_comparison' );
-$paid_comparison       = aichatbotfree_get_field( 'paid_comparison' );
-$trust_copy            = aichatbotfree_get_field( 'trust_copy' );
+
+$option                 = 'option';
+$hero_title             = aichatbotfree_get_field( 'hero_heading', $option );
+$hero_subheading        = aichatbotfree_get_field( 'hero_subheading', $option );
+$hero_icons             = aichatbotfree_get_field( 'hero_icons', $option );
+$hero_background_color  = aichatbotfree_get_field( 'hero_background_color', $option );
+$hero_background_image  = aichatbotfree_get_field( 'hero_background_image', $option );
+$cta_primary_label      = aichatbotfree_get_field( 'hero_cta_primary_label', $option );
+$cta_primary_url        = aichatbotfree_get_field( 'hero_cta_primary_url', $option );
+$cta_secondary_label    = aichatbotfree_get_field( 'hero_cta_secondary_label', $option );
+$cta_secondary_url      = aichatbotfree_get_field( 'hero_cta_secondary_url', $option );
+$category_cards         = aichatbotfree_get_field( 'category_cards', $option );
+$categories_title       = aichatbotfree_get_field( 'categories_title', $option, __( 'Browse by Category', 'aichatbotfree' ) );
+$categories_intro       = aichatbotfree_get_field( 'categories_intro', $option );
+$pillar_title           = aichatbotfree_get_field( 'pillar_title', $option, __( 'Featured Pillar Articles', 'aichatbotfree' ) );
+$pillar_intro           = aichatbotfree_get_field( 'pillar_intro', $option );
+$pillar_articles        = aichatbotfree_get_field( 'pillar_articles', $option );
+$tool_highlight_title   = aichatbotfree_get_field( 'tool_highlight_title', $option );
+$tool_highlight_intro   = aichatbotfree_get_field( 'tool_highlight_intro', $option );
+$tool_highlight_manual  = aichatbotfree_get_field( 'tool_highlight', $option );
+$tool_highlight_terms   = (array) aichatbotfree_get_field( 'tool_highlight_terms', $option, [] );
+$tool_highlight_limit   = (int) aichatbotfree_get_field( 'tool_highlight_count', $option, 4 );
+$tool_headers           = aichatbotfree_get_field( 'tool_highlight_headers', $option );
+$free_headers           = aichatbotfree_get_field( 'free_headers', $option );
+$paid_headers           = aichatbotfree_get_field( 'paid_headers', $option );
+$free_comparison        = aichatbotfree_get_field( 'free_comparison', $option );
+$paid_comparison        = aichatbotfree_get_field( 'paid_comparison', $option );
+$use_cases_title        = aichatbotfree_get_field( 'use_cases_title', $option );
+$use_cases_intro        = aichatbotfree_get_field( 'use_cases_intro', $option );
+$use_cases              = aichatbotfree_get_field( 'use_cases', $option );
+$latest_title           = aichatbotfree_get_field( 'latest_title', $option );
+$latest_intro           = aichatbotfree_get_field( 'latest_intro', $option );
+$latest_category        = aichatbotfree_get_field( 'latest_category', $option );
+$latest_count           = (int) aichatbotfree_get_field( 'latest_count', $option, 3 );
+$trust_title            = aichatbotfree_get_field( 'trust_title', $option );
+$trust_items            = aichatbotfree_get_field( 'trust_items', $option );
+$trust_copy             = aichatbotfree_get_field( 'trust_copy', $option );
+
+$hero_styles = [];
+if ( $hero_background_color ) {
+    $hero_styles[] = 'background:' . $hero_background_color;
+}
+if ( $hero_background_image && isset( $hero_background_image['url'] ) ) {
+    $hero_styles[] = 'background-image:url(' . esc_url( $hero_background_image['url'] ) . ')';
+    $hero_styles[] = 'background-size:cover';
+    $hero_styles[] = 'background-position:center';
+}
+$hero_style_attr = $hero_styles ? ' style="' . esc_attr( implode( ';', $hero_styles ) ) . '"' : '';
+
+$tool_highlight = [];
+if ( ! empty( $tool_highlight_terms ) ) {
+    $tool_query = new WP_Query(
+        [
+            'post_type'      => 'chatbot_tool',
+            'posts_per_page' => $tool_highlight_limit,
+            'tax_query'      => [
+                [
+                    'taxonomy' => 'tool_type',
+                    'field'    => 'term_id',
+                    'terms'    => $tool_highlight_terms,
+                ],
+            ],
+        ]
+    );
+    if ( $tool_query->have_posts() ) {
+        $tool_highlight = $tool_query->posts;
+    }
+    wp_reset_postdata();
+}
+
+if ( empty( $tool_highlight ) && ! empty( $tool_highlight_manual ) ) {
+    $tool_highlight = $tool_highlight_manual;
+}
 ?>
-<section class="hero">
+<section class="hero"<?php echo $hero_style_attr; ?>>
     <div class="container hero-grid">
         <div>
             <div class="badge"><?php esc_html_e( 'AI Chatbot Guides & Reviews', 'aichatbotfree' ); ?></div>
-            <h1><?php bloginfo( 'name' ); ?> – <?php esc_html_e( 'Find the Best Free & AI Chatbots for Your Business', 'aichatbotfree' ); ?></h1>
+            <h1><?php echo esc_html( $hero_title ? $hero_title : get_bloginfo( 'name' ) . ' – ' . __( 'Find the Best Free & AI Chatbots for Your Business', 'aichatbotfree' ) ); ?></h1>
             <?php if ( $hero_subheading ) : ?>
                 <p><?php echo esc_html( $hero_subheading ); ?></p>
             <?php else : ?>
                 <p><?php esc_html_e( 'We compare chatbot builders, highlight free vs paid plans, and map the best tools by industry.', 'aichatbotfree' ); ?></p>
+            <?php endif; ?>
+            <?php if ( $hero_icons ) : ?>
+                <div class="hero-icons">
+                    <?php foreach ( $hero_icons as $icon ) : ?>
+                        <span class="pill">
+                            <span class="pill-icon"><?php echo esc_html( $icon['icon'] ?? '' ); ?></span>
+                            <?php echo esc_html( $icon['text'] ?? '' ); ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
             <div class="hero-actions">
                 <?php if ( $cta_primary_label && $cta_primary_url ) : ?>
@@ -44,21 +117,31 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 <section class="section categories">
     <div class="container">
         <div class="section-title">
-            <h2><?php esc_html_e( 'Browse by Category', 'aichatbotfree' ); ?></h2>
-            <p><?php esc_html_e( 'Chatbot basics, builders, industries, and implementation guides.', 'aichatbotfree' ); ?></p>
+            <h2><?php echo esc_html( $categories_title ); ?></h2>
+            <?php if ( $categories_intro ) : ?>
+                <p><?php echo esc_html( $categories_intro ); ?></p>
+            <?php endif; ?>
         </div>
-        <div class="grid cards">
+        <div class="grid cards category-folders">
             <?php
-            $category_slugs = [ 'chatbot-basics', 'chatbot-builders-tools', 'industries', 'implementation-guides' ];
-            foreach ( $category_slugs as $slug ) {
-                $category = get_category_by_slug( $slug );
-                if ( $category ) {
-                    echo '<div class="card">';
-                    echo '<h3>' . esc_html( $category->name ) . '</h3>';
-                    echo '<p>' . esc_html( $category->description ) . '</p>';
-                    echo '<a class="button secondary" href="' . esc_url( get_category_link( $category ) ) . '">' . esc_html__( 'View Guides', 'aichatbotfree' ) . '</a>';
+            if ( $category_cards ) {
+                foreach ( $category_cards as $card ) {
+                    $category = $card['category'] ?? null;
+                    $accent   = $card['accent_color'] ?? '#4a7dff';
+                    $icon     = $card['icon'] ?? '📂';
+                    $link     = $category ? get_category_link( $category ) : '#';
+                    $desc     = $category && ! empty( $category->description ) ? $category->description : __( 'Dive into guides for this category.', 'aichatbotfree' );
+                    echo '<div class="card folder" style="--folder-accent:' . esc_attr( $accent ) . '">';
+                    echo '<div class="folder-top">';
+                    echo '<span class="folder-icon">' . esc_html( $icon ) . '</span>';
+                    echo '<span class="folder-label">' . esc_html( $category ? $category->name : __( 'Category', 'aichatbotfree' ) ) . '</span>';
+                    echo '</div>';
+                    echo '<p>' . esc_html( $desc ) . '</p>';
+                    echo '<a class="button secondary" href="' . esc_url( $link ) . '">' . esc_html__( 'View Guides', 'aichatbotfree' ) . '</a>';
                     echo '</div>';
                 }
+            } else {
+                echo '<p>' . esc_html__( 'Add category cards in Homepage Options > Category Cards.', 'aichatbotfree' ) . '</p>';
             }
             ?>
         </div>
@@ -68,10 +151,12 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 <section class="section pillars">
     <div class="container">
         <div class="section-title">
-            <h2><?php esc_html_e( 'Featured Pillar Articles', 'aichatbotfree' ); ?></h2>
-            <p><?php esc_html_e( 'Start with the fundamentals and deep-dive guides.', 'aichatbotfree' ); ?></p>
+            <h2><?php echo esc_html( $pillar_title ); ?></h2>
+            <?php if ( $pillar_intro ) : ?>
+                <p><?php echo esc_html( $pillar_intro ); ?></p>
+            <?php endif; ?>
         </div>
-        <div class="grid cards">
+        <div class="grid cards pillar-grid">
             <?php
             if ( $pillar_articles ) {
                 foreach ( $pillar_articles as $post ) {
@@ -86,7 +171,7 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
                 }
                 wp_reset_postdata();
             } else {
-                echo '<p>' . esc_html__( 'Select pillar articles in the homepage fields.', 'aichatbotfree' ) . '</p>';
+                echo '<p>' . esc_html__( 'Select pillar articles in Homepage Options.', 'aichatbotfree' ) . '</p>';
             }
             ?>
         </div>
@@ -96,18 +181,21 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 <section class="section tool-highlight">
     <div class="container">
         <div class="section-title">
-            <h2><?php esc_html_e( 'Tool Comparison Highlight', 'aichatbotfree' ); ?></h2>
-            <p><?php esc_html_e( 'Free plan limits, channels, AI support, and best-fit use cases.', 'aichatbotfree' ); ?></p>
+            <h2><?php echo esc_html( $tool_highlight_title ); ?></h2>
+            <?php if ( $tool_highlight_intro ) : ?>
+                <p><?php echo esc_html( $tool_highlight_intro ); ?></p>
+            <?php endif; ?>
         </div>
         <div class="card">
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th><?php esc_html_e( 'Tool', 'aichatbotfree' ); ?></th>
-                        <th><?php esc_html_e( 'Free Plan', 'aichatbotfree' ); ?></th>
-                        <th><?php esc_html_e( 'Channels', 'aichatbotfree' ); ?></th>
-                        <th><?php esc_html_e( 'AI Support', 'aichatbotfree' ); ?></th>
-                        <th><?php esc_html_e( 'Best For', 'aichatbotfree' ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['tool'] ?? __( 'Tool', 'aichatbotfree' ) ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['free_plan'] ?? __( 'Free Plan', 'aichatbotfree' ) ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['channels'] ?? __( 'Channels', 'aichatbotfree' ) ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['ai_support'] ?? __( 'AI Support', 'aichatbotfree' ) ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['best_for'] ?? __( 'Best For', 'aichatbotfree' ) ); ?></th>
+                        <th><?php echo esc_html( $tool_headers['rating'] ?? __( 'Rating', 'aichatbotfree' ) ); ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -116,25 +204,26 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
                     if ( $tool_highlight ) {
                         foreach ( $tool_highlight as $post ) {
                             setup_postdata( $post );
-                            $free_limits = aichatbotfree_get_field( 'free_limits', $post->ID );
-                            $channels    = aichatbotfree_get_field( 'supported_channels', $post->ID );
-                            $ai_support  = aichatbotfree_get_field( 'ai_support', $post->ID );
-                            $best_for    = aichatbotfree_get_field( 'best_for', $post->ID );
-                            $review_url  = get_permalink( $post );
+                            $free_plan = aichatbotfree_get_field( 'free_limits', $post->ID );
+                            $channels  = aichatbotfree_get_field( 'supported_channels', $post->ID );
+                            $ai        = aichatbotfree_get_field( 'ai_support', $post->ID );
+                            $best_for  = aichatbotfree_get_field( 'best_for', $post->ID );
+                            $rating    = aichatbotfree_get_field( 'star_rating', $post->ID );
                             ?>
                             <tr>
                                 <td><?php the_title(); ?></td>
-                                <td><?php echo esc_html( $free_limits ); ?></td>
+                                <td><?php echo esc_html( $free_plan ); ?></td>
                                 <td><?php echo esc_html( $channels ); ?></td>
-                                <td><?php echo esc_html( $ai_support ); ?></td>
+                                <td><?php echo esc_html( $ai ); ?></td>
                                 <td><?php echo esc_html( $best_for ); ?></td>
-                                <td><a class="button secondary" href="<?php echo esc_url( $review_url ); ?>"><?php esc_html_e( 'Read Review', 'aichatbotfree' ); ?></a></td>
+                                <td><?php echo aichatbotfree_render_rating( $rating ); ?></td>
+                                <td><a class="button secondary" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read Review', 'aichatbotfree' ); ?></a></td>
                             </tr>
                             <?php
                         }
                         wp_reset_postdata();
                     } else {
-                        echo '<tr><td colspan="5">' . esc_html__( 'Add chatbot tools to the highlight field.', 'aichatbotfree' ) . '</td></tr>';
+                        echo '<tr><td colspan="7">' . esc_html__( 'Choose chatbot tools via taxonomies or manual picks in Homepage Options.', 'aichatbotfree' ) . '</td></tr>';
                     }
                     ?>
                 </tbody>
@@ -155,10 +244,11 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
                 <table class="comparison-table">
                     <thead>
                         <tr>
-                            <th><?php esc_html_e( 'Tool', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'Free Plan', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'Channels', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'AI', 'aichatbotfree' ); ?></th>
+                            <th><?php echo esc_html( $free_headers['tool'] ?? __( 'Tool', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $free_headers['plan'] ?? __( 'Free Plan', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $free_headers['channels'] ?? __( 'Channels', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $free_headers['ai'] ?? __( 'AI', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $free_headers['rating'] ?? __( 'Rating', 'aichatbotfree' ) ); ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -172,10 +262,11 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
                 <table class="comparison-table">
                     <thead>
                         <tr>
-                            <th><?php esc_html_e( 'Tool', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'Starting At', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'Channels', 'aichatbotfree' ); ?></th>
-                            <th><?php esc_html_e( 'AI', 'aichatbotfree' ); ?></th>
+                            <th><?php echo esc_html( $paid_headers['tool'] ?? __( 'Tool', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $paid_headers['price'] ?? __( 'Starting At', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $paid_headers['channels'] ?? __( 'Channels', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $paid_headers['ai'] ?? __( 'AI', 'aichatbotfree' ) ); ?></th>
+                            <th><?php echo esc_html( $paid_headers['rating'] ?? __( 'Rating', 'aichatbotfree' ) ); ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -191,53 +282,40 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 <section class="section use-cases">
     <div class="container">
         <div class="section-title">
-            <h2><?php esc_html_e( 'Industry Use Cases', 'aichatbotfree' ); ?></h2>
-            <p><?php esc_html_e( 'Finance, healthcare, real estate, travel, restaurants, HR, SaaS, logistics, and more.', 'aichatbotfree' ); ?></p>
+            <h2><?php echo esc_html( $use_cases_title ); ?></h2>
+            <?php if ( $use_cases_intro ) : ?>
+                <p><?php echo esc_html( $use_cases_intro ); ?></p>
+            <?php endif; ?>
         </div>
-        <div class="grid cards">
+        <div class="grid cards use-case-grid">
             <?php
-            $use_cases = [
-                [
-                    'label' => 'Finance',
-                    'slug'  => 'finance',
-                ],
-                [
-                    'label' => 'Healthcare',
-                    'slug'  => 'healthcare',
-                ],
-                [
-                    'label' => 'Real Estate',
-                    'slug'  => 'real-estate',
-                ],
-                [
-                    'label' => 'Travel',
-                    'slug'  => 'travel',
-                ],
-                [
-                    'label' => 'Restaurants',
-                    'slug'  => 'restaurants',
-                ],
-                [
-                    'label' => 'HR',
-                    'slug'  => 'hr',
-                ],
-                [
-                    'label' => 'SaaS',
-                    'slug'  => 'saas',
-                ],
-                [
-                    'label' => 'Logistics',
-                    'slug'  => 'logistics',
-                ],
-            ];
-            foreach ( $use_cases as $case ) {
-                $category = get_category_by_slug( $case['slug'] );
-                $link     = $category ? get_category_link( $category ) : '#';
-                echo '<div class="card">';
-                echo '<h3>' . esc_html( $case['label'] ) . '</h3>';
-                echo '<p>' . esc_html__( 'See the best chatbot flows and tools for this vertical.', 'aichatbotfree' ) . '</p>';
-                echo '<a class="button secondary" href="' . esc_url( $link ) . '">' . esc_html__( 'View Use Case', 'aichatbotfree' ) . '</a>';
-                echo '</div>';
+            if ( $use_cases ) {
+                foreach ( $use_cases as $case ) {
+                    $category = $case['category'] ?? null;
+                    $link     = $category ? get_category_link( $category ) : '#';
+                    $bg_image = $case['background']['url'] ?? '';
+                    $bg_color = $case['background_color'] ?? '';
+                    $styles   = [];
+                    if ( $bg_image ) {
+                        $styles[] = 'background-image:url(' . esc_url( $bg_image ) . ')';
+                        $styles[] = 'background-size:cover';
+                        $styles[] = 'background-position:center';
+                    }
+                    if ( $bg_color ) {
+                        $styles[] = 'background-color:' . $bg_color;
+                    }
+                    $style_attr = $styles ? ' style="' . esc_attr( implode( ';', $styles ) ) . '"' : '';
+                    echo '<div class="card use-case"' . $style_attr . '>';
+                    if ( ! empty( $case['icon'] ) ) {
+                        echo '<div class="use-case-icon">' . esc_html( $case['icon'] ) . '</div>';
+                    }
+                    echo '<h3>' . esc_html( $case['title'] ?? '' ) . '</h3>';
+                    echo '<p>' . esc_html( $case['description'] ?? '' ) . '</p>';
+                    echo '<a class="button secondary" href="' . esc_url( $link ) . '">' . esc_html__( 'View Use Case', 'aichatbotfree' ) . '</a>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p>' . esc_html__( 'Add industry cards in Homepage Options.', 'aichatbotfree' ) . '</p>';
             }
             ?>
         </div>
@@ -247,17 +325,21 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 <section class="section latest-posts">
     <div class="container">
         <div class="section-title">
-            <h2><?php esc_html_e( 'Latest Blog & Trends', 'aichatbotfree' ); ?></h2>
-            <p><?php esc_html_e( 'Stay updated with new tactics, roll-outs, and product updates.', 'aichatbotfree' ); ?></p>
+            <h2><?php echo esc_html( $latest_title ); ?></h2>
+            <?php if ( $latest_intro ) : ?>
+                <p><?php echo esc_html( $latest_intro ); ?></p>
+            <?php endif; ?>
         </div>
-        <div class="grid">
+        <div class="grid latest-grid">
             <?php
-            $latest = new WP_Query(
-                [
-                    'post_type'      => 'post',
-                    'posts_per_page' => 6,
-                ]
-            );
+            $latest_args = [
+                'post_type'      => 'post',
+                'posts_per_page' => $latest_count ? $latest_count : 3,
+            ];
+            if ( $latest_category ) {
+                $latest_args['cat'] = $latest_category;
+            }
+            $latest = new WP_Query( $latest_args );
             if ( $latest->have_posts() ) {
                 while ( $latest->have_posts() ) {
                     $latest->the_post();
@@ -278,9 +360,31 @@ $trust_copy            = aichatbotfree_get_field( 'trust_copy' );
 </section>
 
 <section class="section trust">
-    <div class="container">
-        <h3><?php esc_html_e( 'Trust & Credibility', 'aichatbotfree' ); ?></h3>
-        <p><?php echo $trust_copy ? esc_html( $trust_copy ) : esc_html__( 'We manually test chatbot tools, disclose affiliate partnerships, and keep our comparisons objective and refreshed.', 'aichatbotfree' ); ?></p>
+    <div class="container trust-grid">
+        <div class="section-title">
+            <h2><?php echo esc_html( $trust_title ); ?></h2>
+        </div>
+        <?php if ( $trust_items ) : ?>
+            <div class="grid cards trust-cards">
+                <?php foreach ( $trust_items as $item ) : ?>
+                    <div class="card trust-card">
+                        <?php if ( ! empty( $item['icon'] ) ) : ?>
+                            <div class="trust-icon"><?php echo esc_html( $item['icon'] ); ?></div>
+                        <?php endif; ?>
+                        <?php if ( ! empty( $item['heading'] ) ) : ?>
+                            <h3><?php echo esc_html( $item['heading'] ); ?></h3>
+                        <?php endif; ?>
+                        <?php if ( ! empty( $item['text'] ) ) : ?>
+                            <p><?php echo esc_html( $item['text'] ); ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php elseif ( $trust_copy ) : ?>
+            <p><?php echo esc_html( $trust_copy ); ?></p>
+        <?php else : ?>
+            <p><?php esc_html_e( 'We manually test chatbot tools, disclose affiliate partnerships, and keep our comparisons objective and refreshed.', 'aichatbotfree' ); ?></p>
+        <?php endif; ?>
     </div>
 </section>
 <?php

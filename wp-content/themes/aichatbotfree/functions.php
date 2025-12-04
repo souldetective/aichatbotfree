@@ -28,6 +28,18 @@ add_action( 'wp_enqueue_scripts', function () {
     wp_enqueue_style( 'aichatbotfree-main', get_template_directory_uri() . '/assets/css/main.css', [], AI_CHATBOTFREE_VERSION );
 });
 
+if ( function_exists( 'acf_add_options_page' ) ) {
+    acf_add_options_page(
+        [
+            'page_title' => __( 'Homepage Options', 'aichatbotfree' ),
+            'menu_title' => __( 'Homepage Options', 'aichatbotfree' ),
+            'menu_slug'  => 'aichatbotfree-homepage-options',
+            'capability' => 'manage_options',
+            'redirect'   => false,
+        ]
+    );
+}
+
 /**
  * Safely retrieve ACF fields with sensible fallbacks when ACF is not active.
  *
@@ -126,11 +138,52 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
             'title'                 => 'Homepage Blocks',
             'fields'                => [
                 [
+                    'key'   => 'field_home_hero_heading',
+                    'label' => 'Hero Heading',
+                    'name'  => 'hero_heading',
+                    'type'  => 'text',
+                    'instructions' => 'Overrides the site title in the hero.',
+                ],
+                [
                     'key'   => 'field_hero_subheading',
                     'label' => 'Hero Subheading',
                     'name'  => 'hero_subheading',
                     'type'  => 'textarea',
                     'rows'  => 3,
+                ],
+                [
+                    'key'   => 'field_hero_icons',
+                    'label' => 'Hero Icons/Highlights',
+                    'name'  => 'hero_icons',
+                    'type'  => 'repeater',
+                    'button_label' => 'Add Highlight',
+                    'sub_fields'   => [
+                        [
+                            'key'   => 'field_hero_icon',
+                            'label' => 'Icon (emoji or text)',
+                            'name'  => 'icon',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_hero_icon_text',
+                            'label' => 'Highlight Text',
+                            'name'  => 'text',
+                            'type'  => 'text',
+                        ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_hero_bg_color',
+                    'label' => 'Hero Background Color',
+                    'name'  => 'hero_background_color',
+                    'type'  => 'color_picker',
+                ],
+                [
+                    'key'   => 'field_hero_bg_image',
+                    'label' => 'Hero Background Image',
+                    'name'  => 'hero_background_image',
+                    'type'  => 'image',
+                    'return_format' => 'array',
                 ],
                 [
                     'key'   => 'field_hero_cta_primary',
@@ -157,6 +210,66 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                     'type'  => 'url',
                 ],
                 [
+                    'key'   => 'field_categories_title',
+                    'label' => 'Categories Title',
+                    'name'  => 'categories_title',
+                    'type'  => 'text',
+                    'default_value' => 'Browse by Category',
+                ],
+                [
+                    'key'   => 'field_categories_intro',
+                    'label' => 'Categories Intro',
+                    'name'  => 'categories_intro',
+                    'type'  => 'textarea',
+                    'rows'  => 2,
+                    'default_value' => 'Chatbot basics, builders, industries, and implementation guides.',
+                ],
+                [
+                    'key'   => 'field_category_cards',
+                    'label' => 'Category Cards',
+                    'name'  => 'category_cards',
+                    'type'  => 'repeater',
+                    'button_label' => 'Add Category Card',
+                    'sub_fields'   => [
+                        [
+                            'key'   => 'field_category_choice',
+                            'label' => 'Category',
+                            'name'  => 'category',
+                            'type'  => 'taxonomy',
+                            'taxonomy' => 'category',
+                            'field_type' => 'select',
+                            'return_format' => 'object',
+                        ],
+                        [
+                            'key'   => 'field_category_color',
+                            'label' => 'Accent Color',
+                            'name'  => 'accent_color',
+                            'type'  => 'color_picker',
+                        ],
+                        [
+                            'key'   => 'field_category_icon',
+                            'label' => 'Icon (emoji or text)',
+                            'name'  => 'icon',
+                            'type'  => 'text',
+                        ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_pillar_title',
+                    'label' => 'Pillar Section Title',
+                    'name'  => 'pillar_title',
+                    'type'  => 'text',
+                    'default_value' => 'Featured Pillar Articles',
+                ],
+                [
+                    'key'   => 'field_pillar_intro',
+                    'label' => 'Pillar Section Intro',
+                    'name'  => 'pillar_intro',
+                    'type'  => 'textarea',
+                    'rows'  => 2,
+                    'default_value' => 'Start with the fundamentals and deep-dive guides.',
+                ],
+                [
                     'key'   => 'field_pillar_posts',
                     'label' => 'Featured Pillar Articles',
                     'name'  => 'pillar_articles',
@@ -168,6 +281,21 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                     'max' => 4,
                 ],
                 [
+                    'key'   => 'field_tool_highlight_title',
+                    'label' => 'Tool Highlight Title',
+                    'name'  => 'tool_highlight_title',
+                    'type'  => 'text',
+                    'default_value' => 'Tool Comparison Highlight',
+                ],
+                [
+                    'key'   => 'field_tool_highlight_intro',
+                    'label' => 'Tool Highlight Intro',
+                    'name'  => 'tool_highlight_intro',
+                    'type'  => 'textarea',
+                    'rows'  => 2,
+                    'default_value' => 'Free plan limits, channels, AI support, and best-fit use cases.',
+                ],
+                [
                     'key'   => 'field_tool_highlight',
                     'label' => 'Tool Comparison Highlight',
                     'name'  => 'tool_highlight',
@@ -176,6 +304,75 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                     'filters' => [ 'search', 'taxonomy' ],
                     'return_format' => 'object',
                     'max' => 4,
+                ],
+                [
+                    'key'   => 'field_tool_highlight_terms',
+                    'label' => 'Tool Highlight Terms',
+                    'name'  => 'tool_highlight_terms',
+                    'type'  => 'taxonomy',
+                    'taxonomy' => 'tool_type',
+                    'field_type' => 'multi_select',
+                    'return_format' => 'id',
+                    'instructions' => 'Select tool_type terms to auto-populate the comparison table. Leaves manual picks above as fallback.',
+                ],
+                [
+                    'key'   => 'field_tool_highlight_limit',
+                    'label' => 'Tool Highlight Count',
+                    'name'  => 'tool_highlight_count',
+                    'type'  => 'number',
+                    'default_value' => 4,
+                    'min' => 1,
+                    'max' => 10,
+                ],
+                [
+                    'key'   => 'field_tool_highlight_headers',
+                    'label' => 'Tool Highlight Headers',
+                    'name'  => 'tool_highlight_headers',
+                    'type'  => 'group',
+                    'sub_fields' => [
+                        [
+                            'key' => 'field_tool_header_tool',
+                            'label' => 'Tool Label',
+                            'name' => 'tool',
+                            'type' => 'text',
+                            'default_value' => 'Tool',
+                        ],
+                        [
+                            'key' => 'field_tool_header_free',
+                            'label' => 'Free Plan Label',
+                            'name' => 'free_plan',
+                            'type' => 'text',
+                            'default_value' => 'Free Plan',
+                        ],
+                        [
+                            'key' => 'field_tool_header_channels',
+                            'label' => 'Channels Label',
+                            'name' => 'channels',
+                            'type' => 'text',
+                            'default_value' => 'Channels',
+                        ],
+                        [
+                            'key' => 'field_tool_header_ai',
+                            'label' => 'AI Label',
+                            'name' => 'ai_support',
+                            'type' => 'text',
+                            'default_value' => 'AI Support',
+                        ],
+                        [
+                            'key' => 'field_tool_header_best',
+                            'label' => 'Best For Label',
+                            'name' => 'best_for',
+                            'type' => 'text',
+                            'default_value' => 'Best For',
+                        ],
+                        [
+                            'key' => 'field_tool_header_rating',
+                            'label' => 'Rating Label',
+                            'name' => 'rating',
+                            'type' => 'text',
+                            'default_value' => 'Rating',
+                        ],
+                    ],
                 ],
                 [
                     'key'   => 'field_free_table',
@@ -209,6 +406,15 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                             'label' => 'AI Support',
                             'name' => 'ai_support',
                             'type' => 'text',
+                        ],
+                        [
+                            'key' => 'field_free_rating',
+                            'label' => 'Rating (0-5)',
+                            'name' => 'rating',
+                            'type' => 'number',
+                            'min' => 0,
+                            'max' => 5,
+                            'step' => 0.1,
                         ],
                     ],
                 ],
@@ -245,23 +451,176 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                             'name' => 'ai_support',
                             'type' => 'text',
                         ],
+                        [
+                            'key' => 'field_paid_rating',
+                            'label' => 'Rating (0-5)',
+                            'name' => 'rating',
+                            'type' => 'number',
+                            'min' => 0,
+                            'max' => 5,
+                            'step' => 0.1,
+                        ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_free_headers',
+                    'label' => 'Free Table Headers',
+                    'name'  => 'free_headers',
+                    'type'  => 'group',
+                    'sub_fields' => [
+                        [ 'key' => 'field_free_header_tool', 'label' => 'Tool', 'name' => 'tool', 'type' => 'text', 'default_value' => 'Tool' ],
+                        [ 'key' => 'field_free_header_plan', 'label' => 'Plan', 'name' => 'plan', 'type' => 'text', 'default_value' => 'Free Plan' ],
+                        [ 'key' => 'field_free_header_channels', 'label' => 'Channels', 'name' => 'channels', 'type' => 'text', 'default_value' => 'Channels' ],
+                        [ 'key' => 'field_free_header_ai', 'label' => 'AI', 'name' => 'ai', 'type' => 'text', 'default_value' => 'AI' ],
+                        [ 'key' => 'field_free_header_rating', 'label' => 'Rating', 'name' => 'rating', 'type' => 'text', 'default_value' => 'Rating' ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_paid_headers',
+                    'label' => 'Paid Table Headers',
+                    'name'  => 'paid_headers',
+                    'type'  => 'group',
+                    'sub_fields' => [
+                        [ 'key' => 'field_paid_header_tool', 'label' => 'Tool', 'name' => 'tool', 'type' => 'text', 'default_value' => 'Tool' ],
+                        [ 'key' => 'field_paid_header_price', 'label' => 'Price', 'name' => 'price', 'type' => 'text', 'default_value' => 'Starting At' ],
+                        [ 'key' => 'field_paid_header_channels', 'label' => 'Channels', 'name' => 'channels', 'type' => 'text', 'default_value' => 'Channels' ],
+                        [ 'key' => 'field_paid_header_ai', 'label' => 'AI', 'name' => 'ai', 'type' => 'text', 'default_value' => 'AI' ],
+                        [ 'key' => 'field_paid_header_rating', 'label' => 'Rating', 'name' => 'rating', 'type' => 'text', 'default_value' => 'Rating' ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_use_cases_title',
+                    'label' => 'Use Cases Title',
+                    'name'  => 'use_cases_title',
+                    'type'  => 'text',
+                    'default_value' => 'Industry Use Cases',
+                ],
+                [
+                    'key'   => 'field_use_cases_intro',
+                    'label' => 'Use Cases Intro',
+                    'name'  => 'use_cases_intro',
+                    'type'  => 'textarea',
+                    'rows'  => 2,
+                    'default_value' => 'Finance, healthcare, real estate, travel, restaurants, HR, SaaS, logistics, and more.',
+                ],
+                [
+                    'key'   => 'field_use_cases',
+                    'label' => 'Use Case Cards',
+                    'name'  => 'use_cases',
+                    'type'  => 'repeater',
+                    'button_label' => 'Add Use Case',
+                    'sub_fields' => [
+                        [
+                            'key'   => 'field_use_case_title',
+                            'label' => 'Title',
+                            'name'  => 'title',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_use_case_description',
+                            'label' => 'Description',
+                            'name'  => 'description',
+                            'type'  => 'textarea',
+                            'rows'  => 2,
+                        ],
+                        [
+                            'key'   => 'field_use_case_category',
+                            'label' => 'Category Link',
+                            'name'  => 'category',
+                            'type'  => 'taxonomy',
+                            'taxonomy' => 'category',
+                            'field_type' => 'select',
+                            'return_format' => 'object',
+                        ],
+                        [
+                            'key'   => 'field_use_case_icon',
+                            'label' => 'Icon (emoji or text)',
+                            'name'  => 'icon',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_use_case_bg',
+                            'label' => 'Background Image',
+                            'name'  => 'background',
+                            'type'  => 'image',
+                            'return_format' => 'array',
+                        ],
+                        [
+                            'key'   => 'field_use_case_color',
+                            'label' => 'Background Color',
+                            'name'  => 'background_color',
+                            'type'  => 'color_picker',
+                        ],
+                    ],
+                ],
+                [
+                    'key'   => 'field_latest_title',
+                    'label' => 'Latest Posts Title',
+                    'name'  => 'latest_title',
+                    'type'  => 'text',
+                    'default_value' => 'Latest Blog & Trends',
+                ],
+                [
+                    'key'   => 'field_latest_intro',
+                    'label' => 'Latest Posts Intro',
+                    'name'  => 'latest_intro',
+                    'type'  => 'textarea',
+                    'rows'  => 2,
+                    'default_value' => 'Stay updated with new tactics, roll-outs, and product updates.',
+                ],
+                [
+                    'key'   => 'field_latest_category',
+                    'label' => 'Latest Posts Category Filter',
+                    'name'  => 'latest_category',
+                    'type'  => 'taxonomy',
+                    'taxonomy' => 'category',
+                    'field_type' => 'select',
+                    'return_format' => 'id',
+                    'allow_null' => 1,
+                ],
+                [
+                    'key'   => 'field_latest_count',
+                    'label' => 'Latest Posts Count',
+                    'name'  => 'latest_count',
+                    'type'  => 'number',
+                    'default_value' => 3,
+                    'min' => 1,
+                    'max' => 6,
+                ],
+                [
+                    'key'   => 'field_trust_title',
+                    'label' => 'Trust Title',
+                    'name'  => 'trust_title',
+                    'type'  => 'text',
+                    'default_value' => 'Trust & Credibility',
+                ],
+                [
+                    'key'   => 'field_trust_items',
+                    'label' => 'Trust Items',
+                    'name'  => 'trust_items',
+                    'type'  => 'repeater',
+                    'button_label' => 'Add Trust Item',
+                    'sub_fields' => [
+                        [ 'key' => 'field_trust_icon', 'label' => 'Icon (emoji or text)', 'name' => 'icon', 'type' => 'text' ],
+                        [ 'key' => 'field_trust_title_item', 'label' => 'Heading', 'name' => 'heading', 'type' => 'text' ],
+                        [ 'key' => 'field_trust_text', 'label' => 'Paragraph', 'name' => 'text', 'type' => 'textarea', 'rows' => 3 ],
                     ],
                 ],
                 [
                     'key'   => 'field_trust_copy',
-                    'label' => 'Trust Block Copy',
+                    'label' => 'Trust Block Copy (legacy)',
                     'name'  => 'trust_copy',
                     'type'  => 'textarea',
                     'rows'  => 4,
-                    'instructions' => 'Explain testing process, affiliate transparency, and review objectivity.',
+                    'instructions' => 'Use Trust Items above; this is a fallback paragraph.',
                 ],
             ],
             'location'              => [
                 [
                     [
-                        'param'    => 'page_type',
+                        'param'    => 'options_page',
                         'operator' => '==',
-                        'value'    => 'front_page',
+                        'value'    => 'aichatbotfree-homepage-options',
                     ],
                 ],
             ],
@@ -298,6 +657,21 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                     'type' => 'text',
                 ],
                 [
+                    'key' => 'field_tool_rating',
+                    'label' => 'Star Rating (0-5)',
+                    'name' => 'star_rating',
+                    'type' => 'number',
+                    'min' => 0,
+                    'max' => 5,
+                    'step' => 0.1,
+                ],
+                [
+                    'key' => 'field_tool_rating_note',
+                    'label' => 'Rating Note',
+                    'name' => 'rating_note',
+                    'type' => 'text',
+                ],
+                [
                     'key' => 'field_best_for',
                     'label' => 'Best For',
                     'name' => 'best_for',
@@ -324,6 +698,38 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
 }
 
 /**
+ * Convert a numeric rating to star icons.
+ */
+function aichatbotfree_render_rating( $rating ) {
+    if ( ! is_numeric( $rating ) ) {
+        return '';
+    }
+
+    $full_stars = floor( $rating );
+    $half_star  = $rating - $full_stars >= 0.5;
+    $output     = '<div class="rating" aria-label="' . esc_attr( $rating ) . ' out of 5 stars">';
+
+    for ( $i = 0; $i < $full_stars; $i++ ) {
+        $output .= '<span class="star full">★</span>';
+    }
+
+    if ( $half_star ) {
+        $output .= '<span class="star half">★</span>';
+    }
+
+    $remaining = 5 - $full_stars - ( $half_star ? 1 : 0 );
+
+    for ( $i = 0; $i < $remaining; $i++ ) {
+        $output .= '<span class="star empty">☆</span>';
+    }
+
+    $output .= '<span class="rating-number">' . esc_html( number_format( (float) $rating, 1 ) ) . '</span>';
+    $output .= '</div>';
+
+    return $output;
+}
+
+/**
  * Helper to render the comparison table rows.
  */
 function aichatbotfree_render_comparison_rows( $items, $type = 'free' ) {
@@ -332,10 +738,11 @@ function aichatbotfree_render_comparison_rows( $items, $type = 'free' ) {
     }
 
     foreach ( $items as $item ) {
-        $tool      = $item['tool'];
+        $tool      = $item['tool'] ?? null;
         $plan      = $type === 'free' ? ( $item['free_plan'] ?? '' ) : ( $item['price'] ?? '' );
         $channels  = $item['channels'] ?? '';
         $ai        = $item['ai_support'] ?? '';
+        $rating    = $item['rating'] ?? '';
         $link      = $tool ? get_permalink( $tool ) : '';
         $tool_name = $tool ? get_the_title( $tool ) : '';
         echo '<tr>';
@@ -343,6 +750,7 @@ function aichatbotfree_render_comparison_rows( $items, $type = 'free' ) {
         echo '<td>' . esc_html( $plan ) . '</td>';
         echo '<td>' . esc_html( $channels ) . '</td>';
         echo '<td>' . esc_html( $ai ) . '</td>';
+        echo '<td>' . aichatbotfree_render_rating( $rating ) . '</td>';
         echo '<td><a class="button secondary" href="' . esc_url( $link ) . '">Read Review</a></td>';
         echo '</tr>';
     }
