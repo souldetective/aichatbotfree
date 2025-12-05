@@ -28,6 +28,7 @@ add_action( 'wp_enqueue_scripts', function () {
     wp_enqueue_style( 'aichatbotfree-main', get_template_directory_uri() . '/assets/css/main.css', [], AI_CHATBOTFREE_VERSION );
 });
 
+// Register a dedicated options page when ACF Pro is available.
 if ( function_exists( 'acf_add_options_page' ) ) {
     acf_add_options_page(
         [
@@ -39,6 +40,20 @@ if ( function_exists( 'acf_add_options_page' ) ) {
         ]
     );
 }
+
+/**
+ * Surface a dashboard notice when ACF is missing so editors know how to unlock
+ * the homepage controls.
+ */
+add_action( 'admin_notices', function () {
+    if ( function_exists( 'get_field' ) ) {
+        return;
+    }
+
+    $url = esc_url( admin_url( 'plugin-install.php?s=Advanced+Custom+Fields&tab=search&type=term' ) );
+
+    echo '<div class="notice notice-warning"><p>' . wp_kses_post( sprintf( __( 'The AI Chatbot Free theme uses Advanced Custom Fields for homepage options. Please install and activate ACF (Pro recommended) to edit the homepage sections. <a href="%s">Install ACF</a>.', 'aichatbotfree' ), $url ) ) . '</p></div>';
+} );
 
 /**
  * Safely retrieve ACF fields with sensible fallbacks when ACF is not active.
@@ -54,6 +69,15 @@ function aichatbotfree_get_field( $selector, $post_id = false, $default = null )
         $value = get_field( $selector, $post_id );
 
         return null !== $value ? $value : $default;
+    }
+
+    // Support options lookups even when ACF is unavailable.
+    if ( $post_id === 'option' || $post_id === 'options' ) {
+        $option_value = get_option( $selector, null );
+
+        if ( null !== $option_value && '' !== $option_value ) {
+            return $option_value;
+        }
     }
 
     if ( $post_id ) {
@@ -621,6 +645,13 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                         'param'    => 'options_page',
                         'operator' => '==',
                         'value'    => 'aichatbotfree-homepage-options',
+                    ],
+                ],
+                [
+                    [
+                        'param'    => 'page_type',
+                        'operator' => '==',
+                        'value'    => 'front_page',
                     ],
                 ],
             ],

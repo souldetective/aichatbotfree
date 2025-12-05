@@ -1,7 +1,8 @@
 <?php
 get_header();
 
-$option                 = 'option';
+$option_page_id         = (int) get_option( 'page_on_front' );
+$option                 = function_exists( 'acf_add_options_page' ) ? 'option' : ( $option_page_id ?: 'option' );
 $hero_title             = aichatbotfree_get_field( 'hero_heading', $option );
 $hero_subheading        = aichatbotfree_get_field( 'hero_subheading', $option );
 $hero_icons             = aichatbotfree_get_field( 'hero_icons', $option );
