@@ -46,13 +46,65 @@ if ( function_exists( 'acf_add_options_page' ) ) {
  * the homepage controls.
  */
 add_action( 'admin_notices', function () {
-    if ( function_exists( 'get_field' ) ) {
+    // If ACF is missing entirely, show the install prompt.
+    if ( ! function_exists( 'get_field' ) ) {
+        $url = esc_url( admin_url( 'plugin-install.php?s=Advanced+Custom+Fields&tab=search&type=term' ) );
+
+        echo '<div class="notice notice-warning"><p>' . wp_kses_post( sprintf( __( 'The AI Chatbot Free theme uses Advanced Custom Fields for homepage options. Please install and activate ACF (Pro recommended) to edit the homepage sections. <a href="%s">Install ACF</a>.', 'aichatbotfree' ), $url ) ) . '</p></div>';
+
         return;
     }
 
-    $url = esc_url( admin_url( 'plugin-install.php?s=Advanced+Custom+Fields&tab=search&type=term' ) );
+    // ACF Free does not expose options pages. Guide editors to the front-page editor instead.
+    if ( function_exists( 'get_field' ) && ! function_exists( 'acf_add_options_page' ) ) {
+        $front_page_id = (int) get_option( 'page_on_front' );
 
-    echo '<div class="notice notice-warning"><p>' . wp_kses_post( sprintf( __( 'The AI Chatbot Free theme uses Advanced Custom Fields for homepage options. Please install and activate ACF (Pro recommended) to edit the homepage sections. <a href="%s">Install ACF</a>.', 'aichatbotfree' ), $url ) ) . '</p></div>';
+        if ( $front_page_id ) {
+            $edit_link = get_edit_post_link( $front_page_id, '' );
+
+            if ( $edit_link ) {
+                echo '<div class="notice notice-info"><p>' . wp_kses_post( sprintf( __( 'Homepage controls are stored on your static front page because ACF Options Pages require ACF Pro. <a href="%s">Edit the front page</a> to manage the hero, categories, comparisons, and trust blocks.', 'aichatbotfree' ), $edit_link ) ) . '</p></div>';
+            }
+        } else {
+            echo '<div class="notice notice-info"><p>' . esc_html__( 'Set a static Front Page in Settings → Reading to unlock the Homepage fields when using the ACF free plugin.', 'aichatbotfree' ) . '</p></div>';
+        }
+    }
+} );
+
+/**
+ * Provide an easy nav item in Appearance for editing the homepage fields when
+ * the ACF options page is unavailable (e.g., ACF Free users).
+ */
+add_action( 'admin_menu', function () {
+    if ( function_exists( 'acf_add_options_page' ) ) {
+        return; // ACF Pro users will see the dedicated options page.
+    }
+
+    $front_page_id = (int) get_option( 'page_on_front' );
+
+    add_theme_page(
+        __( 'Homepage Fields', 'aichatbotfree' ),
+        __( 'Homepage Fields', 'aichatbotfree' ),
+        'edit_pages',
+        'aichatbotfree-homepage-fields',
+        function () use ( $front_page_id ) {
+            echo '<div class="wrap">';
+            echo '<h1>' . esc_html__( 'Homepage Fields', 'aichatbotfree' ) . '</h1>';
+
+            if ( $front_page_id && 'publish' === get_post_status( $front_page_id ) ) {
+                $edit_link = get_edit_post_link( $front_page_id, '' );
+
+                if ( $edit_link ) {
+                    echo '<p>' . wp_kses_post( __( 'Use Advanced Custom Fields on your static front page to control the hero, category folders, comparisons, industry use cases, and trust blocks.', 'aichatbotfree' ) ) . '</p>';
+                    echo '<p><a class="button button-primary" href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit Front Page Fields', 'aichatbotfree' ) . '</a></p>';
+                }
+            } else {
+                echo '<p>' . wp_kses_post( __( 'Set a static Front Page in Settings → Reading, then edit that page to access the Homepage fields when using the ACF free plugin.', 'aichatbotfree' ) ) . '</p>';
+            }
+
+            echo '</div>';
+        }
+    );
 } );
 
 /**
