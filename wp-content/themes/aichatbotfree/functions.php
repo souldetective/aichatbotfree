@@ -228,6 +228,28 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
                     'rows'  => 3,
                 ],
                 [
+                    'key'   => 'field_hero_reason_title',
+                    'label' => 'Hero Side Card Title',
+                    'name'  => 'hero_reason_title',
+                    'type'  => 'text',
+                    'default_value' => 'Why aichatbotfree.net?',
+                ],
+                [
+                    'key'   => 'field_hero_reason_items',
+                    'label' => 'Hero Side Card Bullets',
+                    'name'  => 'hero_reason_items',
+                    'type'  => 'repeater',
+                    'button_label' => 'Add Bullet',
+                    'sub_fields'   => [
+                        [
+                            'key'   => 'field_hero_reason_text',
+                            'label' => 'Bullet Text',
+                            'name'  => 'text',
+                            'type'  => 'text',
+                        ],
+                    ],
+                ],
+                [
                     'key'   => 'field_hero_icons',
                     'label' => 'Hero Icons/Highlights',
                     'name'  => 'hero_icons',

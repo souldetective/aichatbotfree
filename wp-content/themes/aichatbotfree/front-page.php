@@ -12,6 +12,16 @@ $cta_primary_label      = aichatbotfree_get_field( 'hero_cta_primary_label', $op
 $cta_primary_url        = aichatbotfree_get_field( 'hero_cta_primary_url', $option );
 $cta_secondary_label    = aichatbotfree_get_field( 'hero_cta_secondary_label', $option );
 $cta_secondary_url      = aichatbotfree_get_field( 'hero_cta_secondary_url', $option );
+$hero_reason_title      = aichatbotfree_get_field( 'hero_reason_title', $option, __( 'Why aichatbotfree.net?', 'aichatbotfree' ) );
+$hero_reason_items      = aichatbotfree_get_field(
+    'hero_reason_items',
+    $option,
+    [
+        [ 'text' => __( 'Objective testing of free vs paid chatbot builders.', 'aichatbotfree' ) ],
+        [ 'text' => __( 'Use-case guidance across industries and platforms.', 'aichatbotfree' ) ],
+        [ 'text' => __( 'Affiliate transparency and always-updated reviews.', 'aichatbotfree' ) ],
+    ]
+);
 $category_cards         = aichatbotfree_get_field( 'category_cards', $option );
 $categories_title       = aichatbotfree_get_field( 'categories_title', $option, __( 'Browse by Category', 'aichatbotfree' ) );
 $categories_intro       = aichatbotfree_get_field( 'categories_intro', $option );
@@ -49,6 +59,18 @@ if ( $hero_background_image && isset( $hero_background_image['url'] ) ) {
     $hero_styles[] = 'background-position:center';
 }
 $hero_style_attr = $hero_styles ? ' style="' . esc_attr( implode( ';', $hero_styles ) ) . '"' : '';
+
+if ( empty( $hero_reason_items ) ) {
+    $hero_reason_items = [
+        [ 'text' => __( 'Objective testing of free vs paid chatbot builders.', 'aichatbotfree' ) ],
+        [ 'text' => __( 'Use-case guidance across industries and platforms.', 'aichatbotfree' ) ],
+        [ 'text' => __( 'Affiliate transparency and always-updated reviews.', 'aichatbotfree' ) ],
+    ];
+}
+
+if ( ! $hero_reason_title ) {
+    $hero_reason_title = __( 'Why aichatbotfree.net?', 'aichatbotfree' );
+}
 
 $tool_highlight = [];
 if ( ! empty( $tool_highlight_terms ) ) {
@@ -105,12 +127,15 @@ if ( empty( $tool_highlight ) && ! empty( $tool_highlight_manual ) ) {
             </div>
         </div>
         <div class="hero-card">
-            <h3><?php esc_html_e( 'Why aichatbotfree.net?', 'aichatbotfree' ); ?></h3>
-            <ul>
-                <li><?php esc_html_e( 'Objective testing of free vs paid chatbot builders.', 'aichatbotfree' ); ?></li>
-                <li><?php esc_html_e( 'Use-case guidance across industries and platforms.', 'aichatbotfree' ); ?></li>
-                <li><?php esc_html_e( 'Affiliate transparency and always-updated reviews.', 'aichatbotfree' ); ?></li>
-            </ul>
+            <h3><?php echo esc_html( $hero_reason_title ); ?></h3>
+            <?php if ( $hero_reason_items ) : ?>
+                <ul>
+                    <?php foreach ( $hero_reason_items as $reason ) : ?>
+                        <?php if ( empty( $reason['text'] ) ) { continue; } ?>
+                        <li><?php echo esc_html( $reason['text'] ); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </div>
     </div>
 </section>
