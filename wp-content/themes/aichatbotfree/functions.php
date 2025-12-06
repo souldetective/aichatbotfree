@@ -800,6 +800,129 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
             ],
         ]
     );
+
+    acf_add_local_field_group(
+        [
+            'key'      => 'group_post_enhancements',
+            'title'    => 'Post Enhancements',
+            'fields'   => [
+                [
+                    'key'           => 'field_post_takeaways',
+                    'label'         => 'Key Takeaways',
+                    'name'          => 'takeaways',
+                    'type'          => 'repeater',
+                    'button_label'  => 'Add Takeaway',
+                    'instructions'  => 'Optional punchy bullets that summarize the article.',
+                    'sub_fields'    => [
+                        [
+                            'key'   => 'field_post_takeaway_text',
+                            'label' => 'Takeaway',
+                            'name'  => 'text',
+                            'type'  => 'text',
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => 'field_post_pull_quote',
+                    'label'        => 'Pull Quote',
+                    'name'         => 'pull_quote',
+                    'type'         => 'group',
+                    'instructions' => 'Optional highlighted quote for emphasis.',
+                    'sub_fields'   => [
+                        [
+                            'key'   => 'field_post_pull_quote_text',
+                            'label' => 'Quote Text',
+                            'name'  => 'text',
+                            'type'  => 'textarea',
+                            'rows'  => 3,
+                        ],
+                        [
+                            'key'   => 'field_post_pull_quote_attr',
+                            'label' => 'Attribution',
+                            'name'  => 'attribution',
+                            'type'  => 'text',
+                        ],
+                    ],
+                ],
+                [
+                    'key'           => 'field_post_faqs',
+                    'label'         => 'FAQs',
+                    'name'          => 'faqs',
+                    'type'          => 'repeater',
+                    'button_label'  => 'Add FAQ',
+                    'instructions'  => 'Add question and answer pairs for this article.',
+                    'sub_fields'    => [
+                        [
+                            'key'   => 'field_post_faq_question',
+                            'label' => 'Question',
+                            'name'  => 'question',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_post_faq_answer',
+                            'label' => 'Answer',
+                            'name'  => 'answer',
+                            'type'  => 'wysiwyg',
+                            'tabs'  => 'visual',
+                            'toolbar' => 'basic',
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => 'field_post_schema',
+                    'label'        => 'FAQ / Article Schema (JSON-LD)',
+                    'name'         => 'schema_jsonld',
+                    'type'         => 'textarea',
+                    'rows'         => 6,
+                    'instructions' => 'Paste JSON-LD (e.g., FAQPage). If empty, FAQPage schema will be auto-generated from the FAQ repeater.',
+                ],
+                [
+                    'key'         => 'field_post_cta_banner',
+                    'label'       => 'CTA Banner',
+                    'name'        => 'cta_banner',
+                    'type'        => 'group',
+                    'instructions'=> 'Optional CTA at the end of the article.',
+                    'sub_fields'  => [
+                        [
+                            'key'   => 'field_post_cta_heading',
+                            'label' => 'Heading',
+                            'name'  => 'heading',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_post_cta_body',
+                            'label' => 'Body',
+                            'name'  => 'body',
+                            'type'  => 'textarea',
+                            'rows'  => 3,
+                        ],
+                        [
+                            'key'   => 'field_post_cta_label',
+                            'label' => 'Button Label',
+                            'name'  => 'label',
+                            'type'  => 'text',
+                        ],
+                        [
+                            'key'   => 'field_post_cta_url',
+                            'label' => 'Button URL',
+                            'name'  => 'url',
+                            'type'  => 'url',
+                        ],
+                    ],
+                ],
+            ],
+            'location' => [
+                [
+                    [
+                        'param'    => 'post_type',
+                        'operator' => '==',
+                        'value'    => 'post',
+                    ],
+                ],
+            ],
+            'position' => 'acf_after_title',
+        ]
+    );
 }
 
 /**
@@ -860,4 +983,59 @@ function aichatbotfree_render_comparison_rows( $items, $type = 'free' ) {
         echo '</tr>';
     }
 }
+
+/**
+ * Output FAQ schema for posts when available.
+ */
+function aichatbotfree_output_post_schema() {
+    if ( ! is_singular( 'post' ) ) {
+        return;
+    }
+
+    $post_id        = get_the_ID();
+    $manual_schema  = aichatbotfree_get_field( 'schema_jsonld', $post_id, '' );
+    $faq_items      = (array) aichatbotfree_get_field( 'faqs', $post_id, [] );
+    $schema_payload = '';
+
+    if ( ! empty( $manual_schema ) ) {
+        $schema_payload = $manual_schema;
+    } elseif ( ! empty( $faq_items ) ) {
+        $entities = [];
+
+        foreach ( $faq_items as $faq ) {
+            $question = trim( wp_strip_all_tags( $faq['question'] ?? '' ) );
+            $answer   = $faq['answer'] ?? '';
+
+            if ( '' === $question || '' === $answer ) {
+                continue;
+            }
+
+            $entities[] = [
+                '@type'          => 'Question',
+                'name'           => $question,
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => wp_kses_post( $answer ),
+                ],
+            ];
+        }
+
+        if ( ! empty( $entities ) ) {
+            $schema_payload = wp_json_encode(
+                [
+                    '@context'    => 'https://schema.org',
+                    '@type'       => 'FAQPage',
+                    'mainEntity'  => $entities,
+                ],
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+            );
+        }
+    }
+
+    if ( $schema_payload ) {
+        echo '\n<!-- AI Chatbot Free FAQ Schema -->\n';
+        echo '<script type="application/ld+json">' . $schema_payload . '</script>';
+    }
+}
+add_action( 'wp_head', 'aichatbotfree_output_post_schema' );
 
