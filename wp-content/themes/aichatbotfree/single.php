@@ -5,6 +5,10 @@
         <h1><?php the_title(); ?></h1>
         <div class="meta"><?php echo esc_html( get_the_date() ); ?></div>
         <div class="entry-content"><?php the_content(); ?></div>
+
+        <?php if ( function_exists( 'have_rows' ) && have_rows( 'article_sections' ) ) : ?>
+            <?php get_template_part( 'template-parts/article-sections' ); ?>
+        <?php endif; ?>
     </article>
 <?php endwhile; endif; ?>
 </div>
