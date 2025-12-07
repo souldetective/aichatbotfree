@@ -26,6 +26,7 @@ add_action( 'after_setup_theme', function () {
 add_action( 'wp_enqueue_scripts', function () {
     wp_enqueue_style( 'aichatbotfree-style', get_stylesheet_uri(), [], AI_CHATBOTFREE_VERSION );
     wp_enqueue_style( 'aichatbotfree-main', get_template_directory_uri() . '/assets/css/main.css', [], AI_CHATBOTFREE_VERSION );
+    wp_enqueue_style( 'aichatbotfree-article-sections', get_template_directory_uri() . '/assets/css/style-article-sections.css', [], AI_CHATBOTFREE_VERSION );
 });
 
 // Register a dedicated options page when ACF Pro is available.
