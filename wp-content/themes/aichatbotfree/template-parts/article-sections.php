@@ -12,6 +12,36 @@ if ( ! have_rows( 'article_sections' ) ) {
 $faq_schema_entities  = [];
 $faq_schema_override  = '';
 $accordion_index      = 0;
+
+if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
+    /**
+     * Builds an inline style attribute for flexible modules using color picker values.
+     *
+     * @return string
+     */
+    function aichatbotfree_article_section_style_attr() {
+        $styles = [];
+
+        $bg   = get_sub_field( 'section_background' );
+        $text = get_sub_field( 'section_text_color' );
+
+        if ( $bg ) {
+            $sanitized_bg = sanitize_hex_color( $bg );
+            $styles[]     = '--section-bg:' . ( $sanitized_bg ? $sanitized_bg : esc_attr( $bg ) );
+        }
+
+        if ( $text ) {
+            $sanitized_text = sanitize_hex_color( $text );
+            $styles[]       = '--section-color:' . ( $sanitized_text ? $sanitized_text : esc_attr( $text ) );
+        }
+
+        if ( empty( $styles ) ) {
+            return '';
+        }
+
+        return ' style="' . esc_attr( implode( ';', $styles ) ) . '"';
+    }
+}
 ?>
 <div class="article-sections-wrapper">
     <?php
@@ -25,7 +55,7 @@ $accordion_index      = 0;
                 $intro = get_sub_field( 'hero_intro' );
                 $ctas  = get_sub_field( 'hero_ctas' );
                 ?>
-                <section class="article-hero">
+                <section class="article-hero"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="article-hero__inner">
                         <?php if ( $title ) : ?>
                             <h1 class="article-hero__title"><?php echo esc_html( $title ); ?></h1>
@@ -58,7 +88,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section article-glance">
+                <section class="article-section article-glance"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="section-heading">
                         <h2><?php esc_html_e( 'At a Glance', 'aichatbotfree' ); ?></h2>
                     </div>
@@ -87,7 +117,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section icon-grid">
+                <section class="article-section icon-grid"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="icon-grid__items">
                         <?php foreach ( $icons as $icon ) :
                             $class = isset( $icon['icon_class'] ) ? $icon['icon_class'] : '';
@@ -113,7 +143,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section chatbot-types">
+                <section class="article-section chatbot-types"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="section-heading">
                         <h2><?php esc_html_e( 'Types', 'aichatbotfree' ); ?></h2>
                     </div>
@@ -193,7 +223,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section how-it-works">
+                <section class="article-section how-it-works"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="how-it-works__grid">
                         <div class="how-it-works__steps">
                             <?php if ( $steps ) : ?>
@@ -233,7 +263,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section feature-grid">
+                <section class="article-section feature-grid"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="feature-grid__items">
                         <?php foreach ( $features as $feature ) :
                             $icon  = isset( $feature['feature_icon'] ) ? $feature['feature_icon'] : '';
@@ -263,7 +293,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section comparison-table">
+                <section class="article-section comparison-table"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="section-heading">
                         <h2><?php esc_html_e( 'Comparison Table', 'aichatbotfree' ); ?></h2>
                     </div>
@@ -314,7 +344,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section industry-cards">
+                <section class="article-section industry-cards"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="industry-grid">
                         <?php foreach ( $industries as $industry ) :
                             $title = isset( $industry['industry_title'] ) ? $industry['industry_title'] : '';
@@ -346,7 +376,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section internal-links">
+                <section class="article-section internal-links"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="section-heading">
                         <h2><?php esc_html_e( 'Further Reading', 'aichatbotfree' ); ?></h2>
                     </div>
@@ -372,7 +402,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section content-block">
+                <section class="article-section content-block"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <?php if ( $heading ) : ?>
                         <h2><?php echo esc_html( $heading ); ?></h2>
                     <?php endif; ?>
@@ -395,7 +425,7 @@ $accordion_index      = 0;
                     $faq_schema_override = $schema_override;
                 }
                 ?>
-                <section class="article-section faq-section">
+                <section class="article-section faq-section"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <?php if ( $faq_title ) : ?>
                         <div class="section-heading">
                             <h2><?php echo esc_html( $faq_title ); ?></h2>
@@ -443,7 +473,7 @@ $accordion_index      = 0;
                     break;
                 }
                 ?>
-                <section class="article-section cta-section">
+                <section class="article-section cta-section"<?php echo aichatbotfree_article_section_style_attr(); ?>>
                     <div class="cta-section__inner">
                         <?php if ( $cta_title ) : ?>
                             <h2><?php echo esc_html( $cta_title ); ?></h2>

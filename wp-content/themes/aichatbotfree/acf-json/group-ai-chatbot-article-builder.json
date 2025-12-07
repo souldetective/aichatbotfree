@@ -47,6 +47,22 @@
                                     "type": "url"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_hero_section_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_hero_section_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -76,6 +92,22 @@
                                     "type": "text"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_at_a_glance_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_at_a_glance_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -105,6 +137,22 @@
                                     "type": "text"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_icon_grid_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_icon_grid_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -181,6 +229,22 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_chatbot_types_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_chatbot_types_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -220,6 +284,22 @@
                             "return_format": "array",
                             "preview_size": "medium",
                             "library": "all"
+                        },
+                        {
+                            "key": "field_how_it_works_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_how_it_works_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -256,6 +336,22 @@
                                     "new_lines": "br"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_feature_grid_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_feature_grid_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -310,6 +406,22 @@
                                     "type": "text"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_comparison_table_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_comparison_table_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -349,6 +461,22 @@
                                     "library": "all"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_industry_cards_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_industry_cards_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -378,6 +506,22 @@
                                     "type": "url"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_internal_links_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_internal_links_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -399,6 +543,22 @@
                             "name": "cb_content",
                             "type": "wysiwyg",
                             "toolbar": "basic"
+                        },
+                        {
+                            "key": "field_content_block_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_content_block_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -444,6 +604,22 @@
                             "instructions": "Paste custom FAQPage JSON-LD. Leave empty to auto-generate from FAQ items.",
                             "rows": 6,
                             "new_lines": ""
+                        },
+                        {
+                            "key": "field_faq_section_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_faq_section_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 },
@@ -477,6 +653,22 @@
                             "label": "CTA Button URL",
                             "name": "footer_cta_url",
                             "type": "url"
+                        },
+                        {
+                            "key": "field_cta_section_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_cta_section_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
                         }
                     ]
                 }

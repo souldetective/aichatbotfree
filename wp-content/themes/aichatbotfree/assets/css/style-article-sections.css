@@ -11,7 +11,7 @@
 .article-section h2 {
     margin-bottom: 12px;
     font-size: 1.9rem;
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
 }
 
 .section-heading {
@@ -22,12 +22,15 @@
 }
 
 .article-hero {
-    background: radial-gradient(circle at 20% 20%, rgba(74, 125, 255, 0.3), transparent 40%),
+    background: var(
+        --section-bg,
+        radial-gradient(circle at 20% 20%, rgba(74, 125, 255, 0.3), transparent 40%),
         radial-gradient(circle at 80% 0%, rgba(21, 196, 126, 0.28), transparent 32%),
-        linear-gradient(135deg, rgba(12, 18, 34, 0.92), rgba(12, 18, 34, 0.86));
+        linear-gradient(135deg, rgba(12, 18, 34, 0.92), rgba(12, 18, 34, 0.86))
+    );
     border-radius: 20px;
     padding: 48px 32px;
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: var(--shadow);
@@ -53,7 +56,8 @@
 }
 
 .article-section {
-    background: var(--card);
+    background: var(--section-bg, var(--card));
+    color: var(--section-color, var(--light));
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 18px;
     padding: 26px;
@@ -82,7 +86,7 @@
 .glance-card__label {
     font-weight: 700;
     margin-bottom: 6px;
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
 }
 
 .glance-card__desc {
@@ -97,7 +101,7 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.03);
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
 }
 
 .icon-grid__icon {
@@ -140,7 +144,7 @@
     color: var(--muted);
 }
 
-.how-it-works__steps h3 { color: #ffffff; margin-bottom: 4px; }
+.how-it-works__steps h3 { color: var(--section-color, #ffffff); margin-bottom: 4px; }
 
 .how-it-works__image img {
     max-width: 100%;
@@ -169,7 +173,7 @@
     font-weight: 700;
     cursor: pointer;
     text-align: left;
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
     transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -213,7 +217,7 @@
 
 .inline-pills li {
     background: rgba(74, 125, 255, 0.12);
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
     padding: 6px 10px;
     border-radius: 999px;
     font-size: 0.92rem;
@@ -227,7 +231,7 @@
 .responsive-table table {
     width: 100%;
     border-collapse: collapse;
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
 }
 
 .responsive-table th,
@@ -262,7 +266,7 @@
 }
 
 .internal-links__list a {
-    color: #ffffff;
+    color: var(--section-color, #ffffff);
     text-decoration: none;
     font-weight: 600;
 }
@@ -274,8 +278,8 @@
 .faq-section .accordion-toggle { background: linear-gradient(90deg, rgba(252, 211, 77, 0.14), rgba(255, 255, 255, 0.03)); }
 
 .cta-section {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: #ffffff;
+    background: var(--section-bg, linear-gradient(135deg, var(--primary), var(--primary-dark)));
+    color: var(--section-color, #ffffff);
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow);
