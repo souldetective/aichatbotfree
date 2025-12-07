@@ -926,6 +926,152 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
 }
 
 /**
+ * Determine whether the ACF Repeater field type is available (ACF Pro).
+ */
+function aichatbotfree_has_acf_repeater() {
+    return class_exists( 'acf_field_repeater' );
+}
+
+/**
+ * Register fallback meta boxes for FAQ/schema when ACF Free is used (no repeater support).
+ */
+add_action( 'add_meta_boxes', function () {
+    if ( function_exists( 'acf_add_local_field_group' ) && aichatbotfree_has_acf_repeater() ) {
+        return; // Native ACF fields already available.
+    }
+
+    add_meta_box(
+        'aichatbotfree_faqs',
+        __( 'FAQs', 'aichatbotfree' ),
+        function ( $post ) {
+            $faqs = (array) get_post_meta( $post->ID, 'faqs', true );
+
+            wp_nonce_field( 'aichatbotfree_save_faqs', 'aichatbotfree_faqs_nonce' );
+
+            echo '<p>' . esc_html__( 'Add question and answer pairs for this article.', 'aichatbotfree' ) . '</p>';
+            echo '<div id="aichatbotfree-faq-wrapper">';
+
+            if ( empty( $faqs ) ) {
+                $faqs = [ [ 'question' => '', 'answer' => '' ] ];
+            }
+
+            foreach ( $faqs as $index => $faq ) {
+                $question = isset( $faq['question'] ) ? $faq['question'] : '';
+                $answer   = isset( $faq['answer'] ) ? $faq['answer'] : '';
+
+                echo '<div class="aichatbotfree-faq-row" style="margin-bottom:12px;padding:12px;border:1px solid #ddd;border-radius:6px;">';
+                echo '<p><label>' . esc_html__( 'Question', 'aichatbotfree' ) . '</label><br />';
+                echo '<input type="text" style="width:100%;" name="aichatbotfree_faqs[' . esc_attr( $index ) . '][question]" value="' . esc_attr( $question ) . '" /></p>';
+                echo '<p><label>' . esc_html__( 'Answer', 'aichatbotfree' ) . '</label><br />';
+                echo '<textarea style="width:100%;min-height:90px;" name="aichatbotfree_faqs[' . esc_attr( $index ) . '][answer]">' . esc_textarea( $answer ) . '</textarea></p>';
+                echo '<button type="button" class="button link-delete" onclick="this.parentNode.remove();">' . esc_html__( 'Remove', 'aichatbotfree' ) . '</button>';
+                echo '</div>';
+            }
+
+            echo '</div>';
+            echo '<p><button type="button" class="button" id="aichatbotfree-add-faq">' . esc_html__( 'Add FAQ', 'aichatbotfree' ) . '</button></p>';
+
+            echo '<script>
+            (function(){
+                const wrapper = document.getElementById("aichatbotfree-faq-wrapper");
+                const addBtn = document.getElementById("aichatbotfree-add-faq");
+                if(!wrapper || !addBtn){return;}
+                addBtn.addEventListener("click", function(){
+                    const count = wrapper.querySelectorAll(".aichatbotfree-faq-row").length;
+                    const div = document.createElement("div");
+                    div.className = "aichatbotfree-faq-row";
+                    div.style.marginBottom = "12px";
+                    div.style.padding = "12px";
+                    div.style.border = "1px solid #ddd";
+                    div.style.borderRadius = "6px";
+                    div.innerHTML = `
+                        <p><label>Question</label><br />
+                        <input type="text" style="width:100%;" name="aichatbotfree_faqs[${count}][question]" /></p>
+                        <p><label>Answer</label><br />
+                        <textarea style="width:100%;min-height:90px;" name="aichatbotfree_faqs[${count}][answer]"></textarea></p>
+                        <button type="button" class="button link-delete" onclick="this.parentNode.remove();">Remove</button>
+                    `;
+                    wrapper.appendChild(div);
+                });
+            })();
+            </script>';
+        },
+        'post',
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
+        'aichatbotfree_schema',
+        __( 'FAQ / Article Schema (JSON-LD)', 'aichatbotfree' ),
+        function ( $post ) {
+            $schema = get_post_meta( $post->ID, 'schema_jsonld', true );
+            wp_nonce_field( 'aichatbotfree_save_schema', 'aichatbotfree_schema_nonce' );
+
+            echo '<p>' . esc_html__( 'Paste JSON-LD (e.g., FAQPage). If empty, FAQPage schema will be auto-generated from FAQs.', 'aichatbotfree' ) . '</p>';
+            echo '<textarea style="width:100%;min-height:140px;" name="aichatbotfree_schema_jsonld">' . esc_textarea( $schema ) . '</textarea>';
+        },
+        'post',
+        'normal',
+        'default'
+    );
+} );
+
+/**
+ * Save fallback FAQ/schema meta when ACF Free is used.
+ */
+add_action( 'save_post_post', function ( $post_id ) {
+    if ( function_exists( 'acf_add_local_field_group' ) && aichatbotfree_has_acf_repeater() ) {
+        return; // ACF Pro handles saving.
+    }
+
+    if ( ! isset( $_POST['aichatbotfree_faqs_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_faqs_nonce'] ), 'aichatbotfree_save_faqs' ) ) {
+        return;
+    }
+
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    $faqs = isset( $_POST['aichatbotfree_faqs'] ) ? (array) wp_unslash( $_POST['aichatbotfree_faqs'] ) : [];
+    $clean = [];
+
+    foreach ( $faqs as $faq ) {
+        $question = isset( $faq['question'] ) ? sanitize_text_field( $faq['question'] ) : '';
+        $answer   = isset( $faq['answer'] ) ? wp_kses_post( $faq['answer'] ) : '';
+
+        if ( '' === $question && '' === $answer ) {
+            continue;
+        }
+
+        $clean[] = [
+            'question' => $question,
+            'answer'   => $answer,
+        ];
+    }
+
+    if ( empty( $clean ) ) {
+        delete_post_meta( $post_id, 'faqs' );
+    } else {
+        update_post_meta( $post_id, 'faqs', $clean );
+    }
+
+    if ( isset( $_POST['aichatbotfree_schema_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_schema_nonce'] ), 'aichatbotfree_save_schema' ) ) {
+        $schema = isset( $_POST['aichatbotfree_schema_jsonld'] ) ? wp_unslash( $_POST['aichatbotfree_schema_jsonld'] ) : '';
+
+        if ( '' === trim( $schema ) ) {
+            delete_post_meta( $post_id, 'schema_jsonld' );
+        } else {
+            update_post_meta( $post_id, 'schema_jsonld', wp_kses_post( $schema ) );
+        }
+    }
+} );
+
+/**
  * Convert a numeric rating to star icons.
  */
 function aichatbotfree_render_rating( $rating ) {
