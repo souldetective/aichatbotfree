@@ -163,20 +163,10 @@
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_type_bg_color",
-                            "label": "Section Background",
-                            "name": "type_bg_color",
-                            "type": "color_picker",
-                            "instructions": "Background color for the chatbot types block.",
-                            "return_format": "string"
-                        },
-                        {
-                            "key": "field_type_font_color",
-                            "label": "Section Text Color",
-                            "name": "type_font_color",
-                            "type": "color_picker",
-                            "instructions": "Text color for the chatbot types block.",
-                            "return_format": "string"
+                            "key": "field_type_section_title",
+                            "label": "Section Title",
+                            "name": "type_section_title",
+                            "type": "text"
                         },
                         {
                             "key": "field_type_items",
@@ -231,15 +221,15 @@
                                 },
                                 {
                                     "key": "field_type_tools",
-                                    "label": "Tools",
+                                    "label": "Best Tools",
                                     "name": "type_tools",
                                     "type": "repeater",
                                     "button_label": "Add Tool",
                                     "sub_fields": [
                                         {
-                                            "key": "field_type_tool_item",
-                                            "label": "Tool",
-                                            "name": "tool_item",
+                                            "key": "field_type_tool_name",
+                                            "label": "Tool Name",
+                                            "name": "tool_name",
                                             "type": "text"
                                         },
                                         {
@@ -251,6 +241,22 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_type_bg_color",
+                            "label": "Section Background",
+                            "name": "type_bg_color",
+                            "type": "color_picker",
+                            "instructions": "Background color for the chatbot types block.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_type_font_color",
+                            "label": "Section Text Color",
+                            "name": "type_font_color",
+                            "type": "color_picker",
+                            "instructions": "Text color for the chatbot types block.",
+                            "return_format": "string"
                         }
                     ]
                 },

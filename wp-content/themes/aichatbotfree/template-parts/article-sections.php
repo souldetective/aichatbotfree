@@ -138,7 +138,8 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 break;
 
             case 'chatbot_types':
-                $types = get_sub_field( 'type_items' );
+                $types          = get_sub_field( 'type_items' );
+                $section_title  = get_sub_field( 'type_section_title' );
                 if ( empty( $types ) ) {
                     break;
                 }
@@ -149,7 +150,7 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
 
                 if ( $bg_color ) {
                     $sanitized_bg = sanitize_hex_color( $bg_color );
-                    $color_value = $sanitized_bg ? $sanitized_bg : esc_attr( $bg_color );
+                    $color_value  = $sanitized_bg ? $sanitized_bg : esc_attr( $bg_color );
                     $style_bits[] = 'background-color:' . $color_value;
                     $style_bits[] = '--section-bg:' . $color_value;
                 }
@@ -161,106 +162,97 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                     $style_bits[]   = '--section-color:' . $font_value;
                 }
 
-                $style_attr = $style_bits ? ' style="' . esc_attr( implode( ';', $style_bits ) ) . '"' : '';
+                $style_attr    = $style_bits ? ' style="' . esc_attr( implode( ';', $style_bits ) ) . '"' : '';
+                $processed     = [];
+                $tools_listing = [];
+
+                foreach ( $types as $type ) {
+                    $type_title = isset( $type['type_title'] ) ? $type['type_title'] : '';
+                    $type_desc  = isset( $type['type_desc'] ) ? $type['type_desc'] : '';
+                    $pros       = isset( $type['type_pros'] ) ? (array) $type['type_pros'] : [];
+                    $cons       = isset( $type['type_cons'] ) ? (array) $type['type_cons'] : [];
+                    $tools      = isset( $type['type_tools'] ) ? (array) $type['type_tools'] : [];
+
+                    $pros_clean = array_values( array_filter( $pros, function ( $item ) {
+                        return ! empty( $item['pro_item'] );
+                    } ) );
+
+                    $cons_clean = array_values( array_filter( $cons, function ( $item ) {
+                        return ! empty( $item['con_item'] );
+                    } ) );
+
+                    foreach ( $tools as $tool ) {
+                        if ( empty( $tool['tool_name'] ) ) {
+                            continue;
+                        }
+                        $tools_listing[] = [
+                            'name' => $tool['tool_name'],
+                            'link' => isset( $tool['tool_link'] ) ? $tool['tool_link'] : '',
+                        ];
+                    }
+
+                    if ( ! $type_title && ! $type_desc && empty( $pros_clean ) && empty( $cons_clean ) ) {
+                        continue;
+                    }
+
+                    $processed[] = [
+                        'title' => $type_title,
+                        'desc'  => $type_desc,
+                        'pros'  => $pros_clean,
+                        'cons'  => $cons_clean,
+                    ];
+                }
+
+                if ( empty( $processed ) ) {
+                    break;
+                }
                 ?>
                 <section class="article-section chatbot-types">
                     <div class="chatbot-types-section"<?php echo $style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-                        <div class="section-heading">
-                            <h2><?php esc_html_e( 'Types', 'aichatbotfree' ); ?></h2>
-                        </div>
-                        <div class="article-accordion" data-accordion="types">
-                            <?php foreach ( $types as $type ) :
-                                $type_title = isset( $type['type_title'] ) ? $type['type_title'] : '';
-                                $type_desc  = isset( $type['type_desc'] ) ? $type['type_desc'] : '';
-                                $pros       = isset( $type['type_pros'] ) ? (array) $type['type_pros'] : [];
-                                $cons       = isset( $type['type_cons'] ) ? (array) $type['type_cons'] : [];
-                                $tools      = isset( $type['type_tools'] ) ? (array) $type['type_tools'] : [];
+                        <?php if ( $section_title ) : ?>
+                            <h2 class="chatbot-type-section-title"><?php echo esc_html( $section_title ); ?></h2>
+                        <?php else : ?>
+                            <h2 class="chatbot-type-section-title"><?php esc_html_e( 'Types', 'aichatbotfree' ); ?></h2>
+                        <?php endif; ?>
+
+                        <div class="chatbot-type-grid article-accordion" data-accordion="types-grid">
+                            <?php foreach ( $processed as $type ) :
                                 $accordion_index++;
                                 $button_id = 'type-accordion-' . $accordion_index;
                                 ?>
-                                <div class="accordion-item chatbot-type-item">
-                                    <button class="accordion-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $button_id ); ?>" id="<?php echo esc_attr( $button_id ); ?>-button">
-                                        <span class="accordion-toggle__title"><?php echo esc_html( $type_title ); ?></span>
+                                <div class="chatbot-type-cell">
+                                    <button class="type-accordion-toggle accordion-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $button_id ); ?>" id="<?php echo esc_attr( $button_id ); ?>-button">
+                                        <span class="accordion-toggle__title"><?php echo esc_html( $type['title'] ); ?></span>
                                         <span class="accordion-toggle__chevron" aria-hidden="true">▸</span>
                                     </button>
-                                    <div class="accordion-panel" id="<?php echo esc_attr( $button_id ); ?>" role="region" aria-labelledby="<?php echo esc_attr( $button_id ); ?>-button">
+                                    <div class="type-accordion-panel accordion-panel" id="<?php echo esc_attr( $button_id ); ?>" role="region" aria-labelledby="<?php echo esc_attr( $button_id ); ?>-button">
                                         <div class="chatbot-type-content">
-                                            <?php if ( $type_desc ) : ?>
-                                                <div class="type-description"><?php echo wp_kses_post( $type_desc ); ?></div>
+                                            <?php if ( ! empty( $type['desc'] ) ) : ?>
+                                                <div class="type-description"><?php echo wp_kses_post( $type['desc'] ); ?></div>
                                             <?php endif; ?>
 
-                                            <?php
-                                            $pros_clean = array_values( array_filter( $pros, function ( $item ) {
-                                                return ! empty( $item['pro_item'] );
-                                            } ) );
-
-                                            $cons_clean = array_values( array_filter( $cons, function ( $item ) {
-                                                return ! empty( $item['con_item'] );
-                                            } ) );
-
-                                            $max_rows = max( count( $pros_clean ), count( $cons_clean ) );
-
-                                            if ( $max_rows > 0 ) :
-                                                ?>
-                                                <div class="pros-cons-table-wrapper">
-                                                    <table class="pros-cons-table" aria-label="<?php esc_attr_e( 'Pros and Cons', 'aichatbotfree' ); ?>">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col"><?php esc_html_e( 'Pros', 'aichatbotfree' ); ?></th>
-                                                                <th scope="col"><?php esc_html_e( 'Cons', 'aichatbotfree' ); ?></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php for ( $i = 0; $i < $max_rows; $i++ ) :
-                                                                $pro_text = isset( $pros_clean[ $i ]['pro_item'] ) ? $pros_clean[ $i ]['pro_item'] : '';
-                                                                $con_text = isset( $cons_clean[ $i ]['con_item'] ) ? $cons_clean[ $i ]['con_item'] : '';
-                                                                ?>
-                                                                <tr>
-                                                                    <td class="pros-cell">
-                                                                        <?php if ( $pro_text ) : ?>
-                                                                            <span class="tick-icon" aria-hidden="true">✓</span>
-                                                                            <span class="pros-text"><?php echo esc_html( $pro_text ); ?></span>
-                                                                        <?php else : ?>
-                                                                            &nbsp;
-                                                                        <?php endif; ?>
-                                                                    </td>
-                                                                    <td class="cons-cell">
-                                                                        <?php if ( $con_text ) : ?>
-                                                                            <span class="cross-icon" aria-hidden="true">✕</span>
-                                                                            <span class="cons-text"><?php echo esc_html( $con_text ); ?></span>
-                                                                        <?php else : ?>
-                                                                            &nbsp;
-                                                                        <?php endif; ?>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php endfor; ?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if ( $tools ) : ?>
-                                                <div class="tools-wrapper">
-                                                    <h4><?php esc_html_e( 'Best Tools', 'aichatbotfree' ); ?></h4>
-                                                    <ul>
-                                                        <?php foreach ( $tools as $tool ) :
-                                                            if ( empty( $tool['tool_item'] ) ) {
-                                                                continue;
-                                                            }
-                                                            $tool_text = $tool['tool_item'];
-                                                            $tool_url  = isset( $tool['tool_link'] ) ? $tool['tool_link'] : '';
-                                                            ?>
-                                                            <li>
-                                                                <?php if ( $tool_url ) : ?>
-                                                                    <a href="<?php echo esc_url( $tool_url ); ?>" target="_blank" rel="nofollow noopener">
-                                                                        <?php echo esc_html( $tool_text ); ?>
-                                                                    </a>
-                                                                <?php else : ?>
-                                                                    <?php echo esc_html( $tool_text ); ?>
-                                                                <?php endif; ?>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    </ul>
+                                            <?php if ( ! empty( $type['pros'] ) || ! empty( $type['cons'] ) ) : ?>
+                                                <div class="pros-cons-wrapper">
+                                                    <div class="pros-column">
+                                                        <h4><?php esc_html_e( 'Pros', 'aichatbotfree' ); ?></h4>
+                                                        <?php if ( ! empty( $type['pros'] ) ) : ?>
+                                                            <ul>
+                                                                <?php foreach ( $type['pros'] as $pro ) : ?>
+                                                                    <li><span class="tick-icon" aria-hidden="true">✓</span><span class="pros-text"><?php echo esc_html( $pro['pro_item'] ); ?></span></li>
+                                                                <?php endforeach; ?>
+                                                            </ul>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <div class="cons-column">
+                                                        <h4><?php esc_html_e( 'Cons', 'aichatbotfree' ); ?></h4>
+                                                        <?php if ( ! empty( $type['cons'] ) ) : ?>
+                                                            <ul>
+                                                                <?php foreach ( $type['cons'] as $con ) : ?>
+                                                                    <li><span class="cross-icon" aria-hidden="true">✕</span><span class="cons-text"><?php echo esc_html( $con['con_item'] ); ?></span></li>
+                                                                <?php endforeach; ?>
+                                                            </ul>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
@@ -268,6 +260,33 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                                 </div>
                             <?php endforeach; ?>
                         </div>
+
+                        <?php if ( ! empty( $tools_listing ) ) : ?>
+                            <div class="best-tools-table-wrapper">
+                                <table class="best-tools-table" aria-label="<?php esc_attr_e( 'Best Tools', 'aichatbotfree' ); ?>">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><?php esc_html_e( 'Best Tools', 'aichatbotfree' ); ?></th>
+                                            <th scope="col"><?php esc_html_e( 'Visit', 'aichatbotfree' ); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ( $tools_listing as $tool ) : ?>
+                                            <tr>
+                                                <td><?php echo esc_html( $tool['name'] ); ?></td>
+                                                <td>
+                                                    <?php if ( ! empty( $tool['link'] ) ) : ?>
+                                                        <a href="<?php echo esc_url( $tool['link'] ); ?>" target="_blank" rel="nofollow noopener"><?php esc_html_e( 'Visit', 'aichatbotfree' ); ?></a>
+                                                    <?php else : ?>
+                                                        <?php esc_html_e( 'Visit', 'aichatbotfree' ); ?>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </section>
                 <?php

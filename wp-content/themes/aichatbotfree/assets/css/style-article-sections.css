@@ -219,15 +219,64 @@
     text-decoration: underline;
 }
 
-.chatbot-type-item .accordion-toggle {
+.chatbot-type-section-title {
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    margin-bottom: 20px;
+}
+
+.chatbot-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.chatbot-type-cell {
     background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbot-type-cell .type-accordion-toggle {
+    width: 100%;
+    text-align: left;
+    background: transparent;
     color: inherit;
+    border: none;
+    padding: 14px 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.chatbot-type-cell .accordion-toggle__chevron {
+    transition: transform 0.25s ease;
+}
+
+.chatbot-type-cell .accordion-toggle.is-active .accordion-toggle__chevron,
+.chatbot-type-cell .type-accordion-toggle.is-active .accordion-toggle__chevron {
+    transform: rotate(90deg);
+}
+
+.type-accordion-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+    opacity: 0;
+}
+
+.type-accordion-panel.is-open {
+    opacity: 1;
 }
 
 .chatbot-type-content {
+    padding: 0 16px 16px;
     display: grid;
     gap: 16px;
-    padding: 8px 0;
     color: inherit;
 }
 
@@ -235,88 +284,90 @@
     color: inherit;
 }
 
-.pros-cons-table-wrapper {
-    width: 100%;
+.pros-cons-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.pros-column ul,
+.cons-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: grid;
+    gap: 8px;
+}
+
+.pros-column li,
+.cons-column li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    column-gap: 8px;
+    color: inherit;
+}
+
+.tick-icon {
+    color: #15c47e;
+    font-weight: 700;
+    padding-right: 6px;
+}
+
+.cross-icon {
+    color: #ff4a4a;
+    font-weight: 700;
+    padding-right: 6px;
+}
+
+.best-tools-table-wrapper {
+    margin-top: 28px;
     overflow-x: auto;
 }
 
-.pros-cons-table {
+.best-tools-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
     color: inherit;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 12px;
     overflow: hidden;
 }
 
-.pros-cons-table th {
+.best-tools-table th,
+.best-tools-table td {
+    padding: 12px 14px;
     text-align: left;
-    padding: 12px 16px;
-    font-weight: 700;
-    color: inherit;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.best-tools-table thead {
     background: rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.pros-cons-table td {
-    padding: 12px 16px;
-    vertical-align: top;
-    color: inherit;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.pros-cons-table tr:last-child td {
+.best-tools-table tr:last-child td {
     border-bottom: none;
 }
 
-.pros-cons-table .pros-cell,
-.pros-cons-table .cons-cell {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.tick-icon {
-    color: #15c47e;
-    font-weight: 700;
-    margin-right: 6px;
-    flex-shrink: 0;
-}
-
-.cross-icon {
-    color: #ff4a4a;
-    font-weight: 700;
-    margin-right: 6px;
-    flex-shrink: 0;
-}
-
-.tools-wrapper h4 {
-    margin-bottom: 8px;
+.best-tools-table a {
     color: inherit;
+    text-decoration: underline;
 }
 
-.tools-wrapper ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 8px;
+@media (max-width: 1023px) {
+    .chatbot-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.tools-wrapper li {
-    color: inherit;
-    display: flex;
-    align-items: flex-start;
-}
+@media (max-width: 768px) {
+    .chatbot-type-grid {
+        grid-template-columns: 1fr;
+    }
 
-.tools-wrapper a {
-    color: inherit;
-}
-
-.chatbot-type-item .accordion-panel {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 0 0 12px 12px;
+    .pros-cons-wrapper {
+        grid-template-columns: 1fr;
+    }
 }
 
 .inline-pills {
