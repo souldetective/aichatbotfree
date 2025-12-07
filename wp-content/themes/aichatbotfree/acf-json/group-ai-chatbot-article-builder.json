@@ -163,6 +163,22 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_type_bg_color",
+                            "label": "Section Background",
+                            "name": "type_bg_color",
+                            "type": "color_picker",
+                            "instructions": "Background color for the chatbot types block.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_type_font_color",
+                            "label": "Section Text Color",
+                            "name": "type_font_color",
+                            "type": "color_picker",
+                            "instructions": "Text color for the chatbot types block.",
+                            "return_format": "string"
+                        },
+                        {
                             "key": "field_type_items",
                             "label": "Type Items",
                             "name": "type_items",
@@ -225,26 +241,16 @@
                                             "label": "Tool",
                                             "name": "tool_item",
                                             "type": "text"
+                                        },
+                                        {
+                                            "key": "field_type_tool_link",
+                                            "label": "Tool Link",
+                                            "name": "tool_link",
+                                            "type": "url"
                                         }
                                     ]
                                 }
                             ]
-                        },
-                        {
-                            "key": "field_chatbot_types_section_background",
-                            "label": "Section Background",
-                            "name": "section_background",
-                            "type": "color_picker",
-                            "instructions": "Override the background for this module.",
-                            "return_format": "string"
-                        },
-                        {
-                            "key": "field_chatbot_types_section_text_color",
-                            "label": "Section Text Color",
-                            "name": "section_text_color",
-                            "type": "color_picker",
-                            "instructions": "Override the text color for this module.",
-                            "return_format": "string"
                         }
                     ]
                 },

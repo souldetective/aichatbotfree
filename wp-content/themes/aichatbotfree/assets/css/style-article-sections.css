@@ -206,6 +206,84 @@
     color: var(--muted);
 }
 
+.chatbot-types-section {
+    padding: clamp(24px, 3vw, 36px);
+    border-radius: 18px;
+    background: var(--section-bg, #0e1525);
+    color: var(--section-color, #ffffff);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.chatbot-types-section a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.chatbot-type-item .accordion-toggle {
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+}
+
+.chatbot-type-content {
+    display: grid;
+    gap: 16px;
+    padding: 8px 0;
+    color: inherit;
+}
+
+.chatbot-type-content .type-description {
+    color: inherit;
+}
+
+.pros-cons-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.pros-cons-wrapper h4,
+.tools-wrapper h4 {
+    margin-bottom: 8px;
+    color: inherit;
+}
+
+.pros-cons-wrapper ul,
+.tools-wrapper ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.pros-cons-wrapper li,
+.tools-wrapper li {
+    color: inherit;
+    display: flex;
+    align-items: flex-start;
+}
+
+.tick-icon {
+    color: #15c47e;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.cross-icon {
+    color: #ff4a4a;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.tools-wrapper a {
+    color: inherit;
+}
+
+.chatbot-type-item .accordion-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 0 0 12px 12px;
+}
+
 .inline-pills {
     display: flex;
     flex-wrap: wrap;
