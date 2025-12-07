@@ -1249,6 +1249,70 @@ add_action( 'add_meta_boxes', function () {
     );
 
     add_meta_box(
+        'aichatbotfree_types',
+        __( 'Types Accordion', 'aichatbotfree' ),
+        function ( $post ) {
+            $types_heading = get_post_meta( $post->ID, 'types_heading', true );
+            $types         = (array) get_post_meta( $post->ID, 'types_accordion', true );
+
+            if ( empty( $types ) ) {
+                $types = [ [ 'title' => '', 'description' => '' ] ];
+            }
+
+            wp_nonce_field( 'aichatbotfree_save_types', 'aichatbotfree_types_nonce' );
+
+            echo '<p>' . esc_html__( 'Add accordion items with title and description. The heading appears above the accordion.', 'aichatbotfree' ) . '</p>';
+
+            echo '<p><label>' . esc_html__( 'Section Heading', 'aichatbotfree' ) . '</label><br />';
+            echo '<input type="text" style="width:100%;" name="aichatbotfree_types_heading" value="' . esc_attr( $types_heading ) . '" placeholder="' . esc_attr__( 'Types', 'aichatbotfree' ) . '" /></p>';
+
+            echo '<div id="aichatbotfree-types-wrapper">';
+            foreach ( $types as $index => $type ) {
+                $title = isset( $type['title'] ) ? $type['title'] : '';
+                $desc  = isset( $type['description'] ) ? $type['description'] : '';
+
+                echo '<div class="aichatbotfree-type-row" style="margin-bottom:12px;padding:12px;border:1px solid #ddd;border-radius:6px;">';
+                echo '<p><label>' . esc_html__( 'Accordion Title', 'aichatbotfree' ) . '</label><br />';
+                echo '<input type="text" style="width:100%;" name="aichatbotfree_types[' . esc_attr( $index ) . '][title]" value="' . esc_attr( $title ) . '" /></p>';
+                echo '<p><label>' . esc_html__( 'Description', 'aichatbotfree' ) . '</label><br />';
+                echo '<textarea style="width:100%;min-height:90px;" name="aichatbotfree_types[' . esc_attr( $index ) . '][description]">' . esc_textarea( $desc ) . '</textarea></p>';
+                echo '<button type="button" class="button link-delete" onclick="this.parentNode.remove();">' . esc_html__( 'Remove', 'aichatbotfree' ) . '</button>';
+                echo '</div>';
+            }
+            echo '</div>';
+            echo '<p><button type="button" class="button" id="aichatbotfree-add-type">' . esc_html__( 'Add Type', 'aichatbotfree' ) . '</button></p>';
+
+            echo '<script>
+            (function(){
+                const wrapper = document.getElementById("aichatbotfree-types-wrapper");
+                const addBtn = document.getElementById("aichatbotfree-add-type");
+                if(!wrapper || !addBtn){return;}
+                addBtn.addEventListener("click", function(){
+                    const count = wrapper.querySelectorAll(".aichatbotfree-type-row").length;
+                    const div = document.createElement("div");
+                    div.className = "aichatbotfree-type-row";
+                    div.style.marginBottom = "12px";
+                    div.style.padding = "12px";
+                    div.style.border = "1px solid #ddd";
+                    div.style.borderRadius = "6px";
+                    div.innerHTML = `
+                        <p><label>' . esc_html__( 'Accordion Title', 'aichatbotfree' ) . '</label><br />
+                        <input type="text" style="width:100%;" name="aichatbotfree_types[${count}][title]" /></p>
+                        <p><label>' . esc_html__( 'Description', 'aichatbotfree' ) . '</label><br />
+                        <textarea style="width:100%;min-height:90px;" name="aichatbotfree_types[${count}][description]"></textarea></p>
+                        <button type="button" class="button link-delete" onclick="this.parentNode.remove();">' . esc_html__( 'Remove', 'aichatbotfree' ) . '</button>
+                    `;
+                    wrapper.appendChild(div);
+                });
+            })();
+            </script>';
+        },
+        'post',
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
         'aichatbotfree_schema',
         __( 'FAQ / Article Schema (JSON-LD)', 'aichatbotfree' ),
         function ( $post ) {
@@ -1272,7 +1336,11 @@ add_action( 'save_post_post', function ( $post_id ) {
         return; // ACF Pro handles saving.
     }
 
-    if ( ! isset( $_POST['aichatbotfree_faqs_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_faqs_nonce'] ), 'aichatbotfree_save_faqs' ) ) {
+    $has_faq_nonce   = isset( $_POST['aichatbotfree_faqs_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_faqs_nonce'] ), 'aichatbotfree_save_faqs' );
+    $has_schema_nonce= isset( $_POST['aichatbotfree_schema_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_schema_nonce'] ), 'aichatbotfree_save_schema' );
+    $has_types_nonce = isset( $_POST['aichatbotfree_types_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_types_nonce'] ), 'aichatbotfree_save_types' );
+
+    if ( ! $has_faq_nonce && ! $has_schema_nonce && ! $has_types_nonce ) {
         return;
     }
 
@@ -1284,36 +1352,70 @@ add_action( 'save_post_post', function ( $post_id ) {
         return;
     }
 
-    $faqs = isset( $_POST['aichatbotfree_faqs'] ) ? (array) wp_unslash( $_POST['aichatbotfree_faqs'] ) : [];
-    $clean = [];
+    if ( $has_faq_nonce ) {
+        $faqs  = isset( $_POST['aichatbotfree_faqs'] ) ? (array) wp_unslash( $_POST['aichatbotfree_faqs'] ) : [];
+        $clean = [];
 
-    foreach ( $faqs as $faq ) {
-        $question = isset( $faq['question'] ) ? sanitize_text_field( $faq['question'] ) : '';
-        $answer   = isset( $faq['answer'] ) ? wp_kses_post( $faq['answer'] ) : '';
+        foreach ( $faqs as $faq ) {
+            $question = isset( $faq['question'] ) ? sanitize_text_field( $faq['question'] ) : '';
+            $answer   = isset( $faq['answer'] ) ? wp_kses_post( $faq['answer'] ) : '';
 
-        if ( '' === $question && '' === $answer ) {
-            continue;
+            if ( '' === $question && '' === $answer ) {
+                continue;
+            }
+
+            $clean[] = [
+                'question' => $question,
+                'answer'   => $answer,
+            ];
         }
 
-        $clean[] = [
-            'question' => $question,
-            'answer'   => $answer,
-        ];
+        if ( empty( $clean ) ) {
+            delete_post_meta( $post_id, 'faqs' );
+        } else {
+            update_post_meta( $post_id, 'faqs', $clean );
+        }
     }
 
-    if ( empty( $clean ) ) {
-        delete_post_meta( $post_id, 'faqs' );
-    } else {
-        update_post_meta( $post_id, 'faqs', $clean );
-    }
-
-    if ( isset( $_POST['aichatbotfree_schema_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['aichatbotfree_schema_nonce'] ), 'aichatbotfree_save_schema' ) ) {
+    if ( $has_schema_nonce ) {
         $schema = isset( $_POST['aichatbotfree_schema_jsonld'] ) ? wp_unslash( $_POST['aichatbotfree_schema_jsonld'] ) : '';
 
         if ( '' === trim( $schema ) ) {
             delete_post_meta( $post_id, 'schema_jsonld' );
         } else {
             update_post_meta( $post_id, 'schema_jsonld', wp_kses_post( $schema ) );
+        }
+    }
+
+    if ( $has_types_nonce ) {
+        $types_heading = isset( $_POST['aichatbotfree_types_heading'] ) ? sanitize_text_field( wp_unslash( $_POST['aichatbotfree_types_heading'] ) ) : '';
+        $types_raw     = isset( $_POST['aichatbotfree_types'] ) ? (array) wp_unslash( $_POST['aichatbotfree_types'] ) : [];
+        $types_clean   = [];
+
+        foreach ( $types_raw as $type ) {
+            $title = isset( $type['title'] ) ? sanitize_text_field( $type['title'] ) : '';
+            $desc  = isset( $type['description'] ) ? wp_kses_post( $type['description'] ) : '';
+
+            if ( '' === trim( $title . $desc ) ) {
+                continue;
+            }
+
+            $types_clean[] = [
+                'title'       => $title,
+                'description' => $desc,
+            ];
+        }
+
+        if ( '' === $types_heading ) {
+            delete_post_meta( $post_id, 'types_heading' );
+        } else {
+            update_post_meta( $post_id, 'types_heading', $types_heading );
+        }
+
+        if ( empty( $types_clean ) ) {
+            delete_post_meta( $post_id, 'types_accordion' );
+        } else {
+            update_post_meta( $post_id, 'types_accordion', $types_clean );
         }
     }
 } );
