@@ -9,8 +9,9 @@ if ( ! have_rows( 'article_sections' ) ) {
     return;
 }
 
-$faq_schema_entities = [];
-$accordion_index     = 0;
+$faq_schema_entities  = [];
+$faq_schema_override  = '';
+$accordion_index      = 0;
 ?>
 <div class="article-sections-wrapper">
     <?php
@@ -384,8 +385,13 @@ $accordion_index     = 0;
             case 'faq_section':
                 $faq_title = get_sub_field( 'faq_title' );
                 $faq_items = get_sub_field( 'faq_items' );
+                $schema_override = get_sub_field( 'faq_schema_jsonld' );
                 if ( empty( $faq_items ) ) {
                     break;
+                }
+
+                if ( $schema_override ) {
+                    $faq_schema_override = $schema_override;
                 }
                 ?>
                 <section class="article-section faq-section">
@@ -455,18 +461,26 @@ $accordion_index     = 0;
     }
     ?>
 </div>
-<?php if ( ! empty( $faq_schema_entities ) ) : ?>
+<?php
+$faq_schema_json = '';
+
+if ( $faq_schema_override ) {
+    $faq_schema_json = $faq_schema_override;
+} elseif ( ! empty( $faq_schema_entities ) ) {
+    $faq_schema_json = wp_json_encode(
+        [
+            '@context'   => 'https://schema.org',
+            '@type'      => 'FAQPage',
+            'mainEntity' => $faq_schema_entities,
+        ],
+        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+    );
+}
+
+if ( $faq_schema_json ) :
+    ?>
     <script type="application/ld+json">
-        <?php
-        echo wp_json_encode(
-            [
-                '@context'    => 'https://schema.org',
-                '@type'       => 'FAQPage',
-                'mainEntity'  => $faq_schema_entities,
-            ],
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
-        );
-        ?>
+        <?php echo $faq_schema_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
     </script>
 <?php endif; ?>
 <script>

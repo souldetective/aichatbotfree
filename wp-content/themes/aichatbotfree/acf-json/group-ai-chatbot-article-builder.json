@@ -435,6 +435,15 @@
                                     "toolbar": "basic"
                                 }
                             ]
+                        },
+                        {
+                            "key": "field_faq_schema_jsonld",
+                            "label": "FAQ Schema JSON-LD (optional)",
+                            "name": "faq_schema_jsonld",
+                            "type": "textarea",
+                            "instructions": "Paste custom FAQPage JSON-LD. Leave empty to auto-generate from FAQ items.",
+                            "rows": 6,
+                            "new_lines": ""
                         }
                     ]
                 },
