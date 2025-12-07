@@ -108,6 +108,39 @@ add_action( 'admin_menu', function () {
 } );
 
 /**
+ * Provide quick guidance for editors on where to manage article extras (FAQs,
+ * schema, and takeaways) directly from the WordPress dashboard.
+ */
+add_action( 'admin_menu', function () {
+    add_theme_page(
+        __( 'Post Enhancements Help', 'aichatbotfree' ),
+        __( 'Post Enhancements Help', 'aichatbotfree' ),
+        'edit_posts',
+        'aichatbotfree-post-enhancements-help',
+        function () {
+            echo '<div class="wrap">';
+            echo '<h1>' . esc_html__( 'How to edit FAQs, schema, and extras', 'aichatbotfree' ) . '</h1>';
+
+            echo '<p>' . esc_html__( 'Edit any Post and scroll to the Post Enhancements area below the editor. There you can add Key Takeaways, a Pull Quote, FAQs (with question/answer pairs), optional CTA banner, and JSON-LD schema. These fields power the layout and FAQ rich results for guides such as "What Is a Chatbot?"', 'aichatbotfree' ) . '</p>';
+
+            echo '<h2>' . esc_html__( 'Where to find the FAQ fields', 'aichatbotfree' ) . '</h2>';
+            echo '<ul style="list-style:disc;margin-left:20px;">';
+            echo '<li>' . esc_html__( 'ACF Pro: Use the FAQs repeater inside the Post Enhancements box.', 'aichatbotfree' ) . '</li>';
+            echo '<li>' . esc_html__( 'ACF Free: Use the built-in FAQs and Schema metaboxes that appear under the editor; they save to the same keys used on the front end.', 'aichatbotfree' ) . '</li>';
+            echo '</ul>';
+
+            echo '<h2>' . esc_html__( 'FAQ schema output', 'aichatbotfree' ) . '</h2>';
+            echo '<p>' . esc_html__( 'Paste a JSON-LD snippet in the Schema field, or leave it blank to auto-generate FAQPage schema from your questions and answers.', 'aichatbotfree' ) . '</p>';
+
+            echo '<h2>' . esc_html__( 'Reminder: keep the article body in the main editor', 'aichatbotfree' ) . '</h2>';
+            echo '<p>' . esc_html__( 'The full article content (headings, paragraphs, lists, and internal links) stays in the standard post editor. Use the enhancements only for structured extras such as FAQs and takeaways.', 'aichatbotfree' ) . '</p>';
+
+            echo '</div>';
+        }
+    );
+} );
+
+/**
  * Safely retrieve ACF fields with sensible fallbacks when ACF is not active.
  *
  * @param string     $selector Field name or key.
