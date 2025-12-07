@@ -35,14 +35,15 @@ $accordion_index      = 0;
                         <?php endif; ?>
                         <?php if ( $ctas ) : ?>
                             <div class="article-hero__ctas">
-                                <?php foreach ( $ctas as $cta ) :
+                                <?php
+                                foreach ( $ctas as $cta ) :
                                     $label = isset( $cta['cta_label'] ) ? $cta['cta_label'] : '';
                                     $url   = isset( $cta['cta_url'] ) ? $cta['cta_url'] : '';
                                     if ( ! $label || ! $url ) {
                                         continue;
                                     }
                                     ?>
-                                    <a class="button button-primary" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
+                                    <a class="button primary" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
@@ -293,9 +294,9 @@ $accordion_index      = 0;
                                         </td>
                                         <td data-label="<?php esc_attr_e( 'AI Support', 'aichatbotfree' ); ?>"><?php echo esc_html( $ai ); ?></td>
                                         <td data-label="<?php esc_attr_e( 'Best For', 'aichatbotfree' ); ?>"><?php echo esc_html( $best ); ?></td>
-                                        <td data-label="<?php esc_attr_e( 'Action', 'aichatbotfree' ); ?>">
+                                    <td data-label="<?php esc_attr_e( 'Action', 'aichatbotfree' ); ?>">
                                             <?php if ( $url && $btn ) : ?>
-                                                <a class="button button-secondary" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $btn ); ?></a>
+                                                <a class="button secondary" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $btn ); ?></a>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
@@ -451,7 +452,7 @@ $accordion_index      = 0;
                             <p><?php echo esc_html( $cta_desc ); ?></p>
                         <?php endif; ?>
                         <?php if ( $cta_label && $cta_url ) : ?>
-                            <a class="button button-primary" href="<?php echo esc_url( $cta_url ); ?>"><?php echo esc_html( $cta_label ); ?></a>
+                            <a class="button primary" href="<?php echo esc_url( $cta_url ); ?>"><?php echo esc_html( $cta_label ); ?></a>
                         <?php endif; ?>
                     </div>
                 </section>
@@ -499,7 +500,14 @@ if ( $faq_schema_json ) :
             if (!panel) return;
 
             button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            button.classList.toggle('is-active', !expanded);
             panel.classList.toggle('is-open', !expanded);
+
+            if (!expanded) {
+                panel.style.maxHeight = panel.scrollHeight + 'px';
+            } else {
+                panel.style.maxHeight = '0px';
+            }
         });
     });
 })();
