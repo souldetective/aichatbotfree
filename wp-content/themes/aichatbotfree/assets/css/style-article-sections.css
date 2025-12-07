@@ -235,19 +235,67 @@
     color: inherit;
 }
 
-.pros-cons-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.pros-cons-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
-.pros-cons-wrapper h4,
+.pros-cons-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.pros-cons-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 700;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pros-cons-table td {
+    padding: 12px 16px;
+    vertical-align: top;
+    color: inherit;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pros-cons-table tr:last-child td {
+    border-bottom: none;
+}
+
+.pros-cons-table .pros-cell,
+.pros-cons-table .cons-cell {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.tick-icon {
+    color: #15c47e;
+    font-weight: 700;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.cross-icon {
+    color: #ff4a4a;
+    font-weight: 700;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
 .tools-wrapper h4 {
     margin-bottom: 8px;
     color: inherit;
 }
 
-.pros-cons-wrapper ul,
 .tools-wrapper ul {
     list-style: none;
     padding: 0;
@@ -256,23 +304,10 @@
     gap: 8px;
 }
 
-.pros-cons-wrapper li,
 .tools-wrapper li {
     color: inherit;
     display: flex;
     align-items: flex-start;
-}
-
-.tick-icon {
-    color: #15c47e;
-    font-weight: 700;
-    margin-right: 6px;
-}
-
-.cross-icon {
-    color: #ff4a4a;
-    font-weight: 700;
-    margin-right: 6px;
 }
 
 .tools-wrapper a {

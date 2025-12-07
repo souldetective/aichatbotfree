@@ -189,37 +189,53 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                                                 <div class="type-description"><?php echo wp_kses_post( $type_desc ); ?></div>
                                             <?php endif; ?>
 
-                                            <?php if ( $pros || $cons ) : ?>
-                                                <div class="pros-cons-wrapper">
-                                                    <?php if ( $pros ) : ?>
-                                                        <div class="pros-column">
-                                                            <h4><?php esc_html_e( 'Pros', 'aichatbotfree' ); ?></h4>
-                                                            <ul>
-                                                                <?php foreach ( $pros as $pro ) :
-                                                                    if ( empty( $pro['pro_item'] ) ) {
-                                                                        continue;
-                                                                    }
-                                                                    ?>
-                                                                    <li><span class="tick-icon" aria-hidden="true">✓</span><?php echo esc_html( $pro['pro_item'] ); ?></li>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                        </div>
-                                                    <?php endif; ?>
+                                            <?php
+                                            $pros_clean = array_values( array_filter( $pros, function ( $item ) {
+                                                return ! empty( $item['pro_item'] );
+                                            } ) );
 
-                                                    <?php if ( $cons ) : ?>
-                                                        <div class="cons-column">
-                                                            <h4><?php esc_html_e( 'Cons', 'aichatbotfree' ); ?></h4>
-                                                            <ul>
-                                                                <?php foreach ( $cons as $con ) :
-                                                                    if ( empty( $con['con_item'] ) ) {
-                                                                        continue;
-                                                                    }
-                                                                    ?>
-                                                                    <li><span class="cross-icon" aria-hidden="true">✕</span><?php echo esc_html( $con['con_item'] ); ?></li>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                        </div>
-                                                    <?php endif; ?>
+                                            $cons_clean = array_values( array_filter( $cons, function ( $item ) {
+                                                return ! empty( $item['con_item'] );
+                                            } ) );
+
+                                            $max_rows = max( count( $pros_clean ), count( $cons_clean ) );
+
+                                            if ( $max_rows > 0 ) :
+                                                ?>
+                                                <div class="pros-cons-table-wrapper">
+                                                    <table class="pros-cons-table" aria-label="<?php esc_attr_e( 'Pros and Cons', 'aichatbotfree' ); ?>">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"><?php esc_html_e( 'Pros', 'aichatbotfree' ); ?></th>
+                                                                <th scope="col"><?php esc_html_e( 'Cons', 'aichatbotfree' ); ?></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php for ( $i = 0; $i < $max_rows; $i++ ) :
+                                                                $pro_text = isset( $pros_clean[ $i ]['pro_item'] ) ? $pros_clean[ $i ]['pro_item'] : '';
+                                                                $con_text = isset( $cons_clean[ $i ]['con_item'] ) ? $cons_clean[ $i ]['con_item'] : '';
+                                                                ?>
+                                                                <tr>
+                                                                    <td class="pros-cell">
+                                                                        <?php if ( $pro_text ) : ?>
+                                                                            <span class="tick-icon" aria-hidden="true">✓</span>
+                                                                            <span class="pros-text"><?php echo esc_html( $pro_text ); ?></span>
+                                                                        <?php else : ?>
+                                                                            &nbsp;
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="cons-cell">
+                                                                        <?php if ( $con_text ) : ?>
+                                                                            <span class="cross-icon" aria-hidden="true">✕</span>
+                                                                            <span class="cons-text"><?php echo esc_html( $con_text ); ?></span>
+                                                                        <?php else : ?>
+                                                                            &nbsp;
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endfor; ?>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             <?php endif; ?>
 
