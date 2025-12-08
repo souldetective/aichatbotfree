@@ -24,8 +24,8 @@
 .article-hero {
     background: var(
         --section-bg,
-        radial-gradient(circle at 20% 20%, rgba(74, 125, 255, 0.3), transparent 40%),
-        radial-gradient(circle at 80% 0%, rgba(21, 196, 126, 0.28), transparent 32%),
+        radial-gradient(circle at 20% 20%, rgba(0, 102, 255, 0.3), transparent 40%),
+        radial-gradient(circle at 80% 0%, rgba(0, 194, 122, 0.28), transparent 32%),
         linear-gradient(135deg, rgba(12, 18, 34, 0.92), rgba(12, 18, 34, 0.86))
     );
     border-radius: 20px;
@@ -256,7 +256,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 14px 16px;
-    background: linear-gradient(90deg, rgba(74, 125, 255, 0.1), rgba(21, 196, 126, 0.08));
+    background: linear-gradient(90deg, rgba(0, 102, 255, 0.12), rgba(0, 194, 122, 0.1));
     border: 0;
     font-weight: 700;
     cursor: pointer;
@@ -297,7 +297,7 @@
 .chatbot-types-section {
     padding: clamp(24px, 3vw, 36px);
     border-radius: 18px;
-    background: var(--section-bg, #0e1525);
+    background: var(--section-bg, #0a1a2f);
     color: var(--section-color, #ffffff);
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
 }
@@ -398,13 +398,13 @@
 }
 
 .tick-icon {
-    color: #15c47e;
+    color: #00c27a;
     font-weight: 700;
     margin-right: 6px;
 }
 
 .cross-icon {
-    color: #ff4a4a;
+    color: #e53935;
     font-weight: 700;
     margin-right: 6px;
 }

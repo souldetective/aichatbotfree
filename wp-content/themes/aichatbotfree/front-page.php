@@ -153,7 +153,7 @@ if ( empty( $tool_highlight ) && ! empty( $tool_highlight_manual ) ) {
             if ( $category_cards ) {
                 foreach ( $category_cards as $card ) {
                     $category = $card['category'] ?? null;
-                    $accent   = $card['accent_color'] ?? '#4a7dff';
+                    $accent   = $card['accent_color'] ?? '#0066ff';
                     $icon     = $card['icon'] ?? '📂';
                     $link     = $category ? get_category_link( $category ) : '#';
                     $desc     = $category && ! empty( $category->description ) ? $category->description : __( 'Dive into guides for this category.', 'aichatbotfree' );
