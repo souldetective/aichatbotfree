@@ -96,3 +96,12 @@
 - **Alerts:** Success Emerald + White text; Warning Amber + Navy text; Error Crimson + White text; Info/Neutral Light Gray + Navy text.
 - **Borders/Dividers:** Light Gray (#F5F7FA) for subtle separation; Navy 10–15% opacity for stronger delineation.
 
+## 10) Where the Brand Colors Appear in the Theme
+- **Global shell:** Body background uses Deep Navy with subtle Electric Blue/Emerald radial accents; text defaults to Light Gray for contrast.
+- **Header/nav:** Sticky header with translucent Deep Navy; nav hover states lift to Electric Blue. Logo/wordmark should use Electric Blue on light or white on dark.
+- **Hero:** Gradient overlay combines Electric Blue and Emerald tints on a Deep Navy base; primary CTA buttons are Electric Blue → Navy gradients with white text, secondary buttons are soft Navy outlines.
+- **Category folders:** Top “tab” bar uses Electric Blue by default (or the per-card accent color from ACF), giving an obvious brand hit above the folder grid.
+- **Pillars/cards/tables:** Cards rest on Deep Navy/Ultra Light Gray mixes with Electric Blue links and Emerald success badges; comparison table hover states use subtle Electric Blue tint.
+- **Ratings/alerts:** Star ratings and highlight badges lean on Amber/Emerald; error/destructive patterns use Crimson for clarity.
+- **Article sections module:** Accordion headers, tick/cross icons, CTA buttons, and section backgrounds pull from the CSS variables set to the brand palette, so flexible layouts inherit the same Electric Blue/Emerald accents.
+
