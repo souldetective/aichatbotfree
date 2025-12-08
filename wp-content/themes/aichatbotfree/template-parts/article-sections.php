@@ -138,9 +138,11 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 break;
 
             case 'chatbot_types':
-                $types          = get_sub_field( 'type_items' );
-                $section_title  = get_sub_field( 'type_section_title' );
-                if ( empty( $types ) ) {
+                $section_title = get_sub_field( 'type_section_title' );
+                $types         = get_sub_field( 'type_items' );
+                $best_tools    = get_sub_field( 'best_tools' );
+
+                if ( empty( $types ) && empty( $best_tools ) ) {
                     break;
                 }
 
@@ -162,129 +164,126 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                     $style_bits[]   = '--section-color:' . $font_value;
                 }
 
-                $style_attr    = $style_bits ? ' style="' . esc_attr( implode( ';', $style_bits ) ) . '"' : '';
-                $processed     = [];
-                $tools_listing = [];
+                $style_attr = $style_bits ? ' style="' . esc_attr( implode( ';', $style_bits ) ) . '"' : '';
 
-                foreach ( $types as $type ) {
-                    $type_title = isset( $type['type_title'] ) ? $type['type_title'] : '';
-                    $type_desc  = isset( $type['type_desc'] ) ? $type['type_desc'] : '';
-                    $pros       = isset( $type['type_pros'] ) ? (array) $type['type_pros'] : [];
-                    $cons       = isset( $type['type_cons'] ) ? (array) $type['type_cons'] : [];
-                    $tools      = isset( $type['type_tools'] ) ? (array) $type['type_tools'] : [];
-
-                    $pros_clean = array_values( array_filter( $pros, function ( $item ) {
-                        return ! empty( $item['pro_item'] );
-                    } ) );
-
-                    $cons_clean = array_values( array_filter( $cons, function ( $item ) {
-                        return ! empty( $item['con_item'] );
-                    } ) );
-
-                    foreach ( $tools as $tool ) {
-                        if ( empty( $tool['tool_name'] ) ) {
-                            continue;
-                        }
-                        $tools_listing[] = [
-                            'name' => $tool['tool_name'],
-                            'link' => isset( $tool['tool_link'] ) ? $tool['tool_link'] : '',
-                        ];
-                    }
-
-                    if ( ! $type_title && ! $type_desc && empty( $pros_clean ) && empty( $cons_clean ) ) {
-                        continue;
-                    }
-
-                    $processed[] = [
-                        'title' => $type_title,
-                        'desc'  => $type_desc,
-                        'pros'  => $pros_clean,
-                        'cons'  => $cons_clean,
-                    ];
-                }
-
-                if ( empty( $processed ) ) {
-                    break;
-                }
                 ?>
                 <section class="article-section chatbot-types">
                     <div class="chatbot-types-section"<?php echo $style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
                         <?php if ( $section_title ) : ?>
-                            <h2 class="chatbot-type-section-title"><?php echo esc_html( $section_title ); ?></h2>
+                            <h2 class="chatbot-types-title"><?php echo esc_html( $section_title ); ?></h2>
                         <?php else : ?>
-                            <h2 class="chatbot-type-section-title"><?php esc_html_e( 'Types', 'aichatbotfree' ); ?></h2>
+                            <h2 class="chatbot-types-title"><?php esc_html_e( 'Types of Chatbots', 'aichatbotfree' ); ?></h2>
                         <?php endif; ?>
 
-                        <div class="chatbot-type-grid article-accordion" data-accordion="types-grid">
-                            <?php foreach ( $processed as $type ) :
-                                $accordion_index++;
-                                $button_id = 'type-accordion-' . $accordion_index;
-                                ?>
-                                <div class="chatbot-type-cell">
-                                    <button class="type-accordion-toggle accordion-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $button_id ); ?>" id="<?php echo esc_attr( $button_id ); ?>-button">
-                                        <span class="accordion-toggle__title"><?php echo esc_html( $type['title'] ); ?></span>
-                                        <span class="accordion-toggle__chevron" aria-hidden="true">▸</span>
-                                    </button>
-                                    <div class="type-accordion-panel accordion-panel" id="<?php echo esc_attr( $button_id ); ?>" role="region" aria-labelledby="<?php echo esc_attr( $button_id ); ?>-button">
-                                        <div class="chatbot-type-content">
-                                            <?php if ( ! empty( $type['desc'] ) ) : ?>
-                                                <div class="type-description"><?php echo wp_kses_post( $type['desc'] ); ?></div>
+                        <?php if ( ! empty( $types ) ) : ?>
+                            <div class="chatbot-type-accordion" data-accordion="chatbot-types">
+                                <?php foreach ( $types as $type ) :
+                                    $accordion_index++;
+                                    $button_id = 'type-accordion-' . $accordion_index;
+
+                                    $type_title = isset( $type['type_title'] ) ? $type['type_title'] : '';
+                                    $type_desc  = isset( $type['type_desc'] ) ? $type['type_desc'] : '';
+                                    $pros       = isset( $type['type_pros'] ) ? (array) $type['type_pros'] : [];
+                                    $cons       = isset( $type['type_cons'] ) ? (array) $type['type_cons'] : [];
+                                    $tools      = isset( $type['type_tools'] ) ? (array) $type['type_tools'] : [];
+
+                                    $pros = array_values( array_filter( $pros, function ( $item ) {
+                                        return ! empty( $item['pro_item'] );
+                                    } ) );
+
+                                    $cons = array_values( array_filter( $cons, function ( $item ) {
+                                        return ! empty( $item['con_item'] );
+                                    } ) );
+
+                                    $tools = array_values( array_filter( $tools, function ( $item ) {
+                                        return ! empty( $item['tool_name'] );
+                                    } ) );
+
+                                    if ( ! $type_title && ! $type_desc && empty( $pros ) && empty( $cons ) && empty( $tools ) ) {
+                                        continue;
+                                    }
+                                    ?>
+                                    <div class="chatbot-type-accordion-item">
+                                        <button class="chatbot-type-accordion-header" type="button" aria-expanded="false" aria-controls="<?php echo esc_attr( $button_id ); ?>" id="<?php echo esc_attr( $button_id ); ?>-button">
+                                            <span class="chatbot-type-title"><?php echo esc_html( $type_title ); ?></span>
+                                            <span class="accordion-icon" aria-hidden="true">+</span>
+                                        </button>
+                                        <div class="chatbot-type-accordion-body" id="<?php echo esc_attr( $button_id ); ?>" role="region" aria-labelledby="<?php echo esc_attr( $button_id ); ?>-button">
+                                            <?php if ( $type_desc ) : ?>
+                                                <div class="type-description"><?php echo wp_kses_post( $type_desc ); ?></div>
                                             <?php endif; ?>
 
-                                            <?php if ( ! empty( $type['pros'] ) || ! empty( $type['cons'] ) ) : ?>
+                                            <?php if ( ! empty( $pros ) || ! empty( $cons ) ) : ?>
                                                 <div class="pros-cons-wrapper">
                                                     <div class="pros-column">
                                                         <h4><?php esc_html_e( 'Pros', 'aichatbotfree' ); ?></h4>
-                                                        <?php if ( ! empty( $type['pros'] ) ) : ?>
+                                                        <?php if ( ! empty( $pros ) ) : ?>
                                                             <ul>
-                                                                <?php foreach ( $type['pros'] as $pro ) : ?>
-                                                                    <li><span class="tick-icon" aria-hidden="true">✓</span><span class="pros-text"><?php echo esc_html( $pro['pro_item'] ); ?></span></li>
+                                                                <?php foreach ( $pros as $pro ) : ?>
+                                                                    <li><span class="tick-icon" aria-hidden="true">✓</span><?php echo esc_html( $pro['pro_item'] ); ?></li>
                                                                 <?php endforeach; ?>
                                                             </ul>
                                                         <?php endif; ?>
                                                     </div>
                                                     <div class="cons-column">
                                                         <h4><?php esc_html_e( 'Cons', 'aichatbotfree' ); ?></h4>
-                                                        <?php if ( ! empty( $type['cons'] ) ) : ?>
+                                                        <?php if ( ! empty( $cons ) ) : ?>
                                                             <ul>
-                                                                <?php foreach ( $type['cons'] as $con ) : ?>
-                                                                    <li><span class="cross-icon" aria-hidden="true">✕</span><span class="cons-text"><?php echo esc_html( $con['con_item'] ); ?></span></li>
+                                                                <?php foreach ( $cons as $con ) : ?>
+                                                                    <li><span class="cross-icon" aria-hidden="true">✕</span><?php echo esc_html( $con['con_item'] ); ?></li>
                                                                 <?php endforeach; ?>
                                                             </ul>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
+
+                                            <?php if ( ! empty( $tools ) ) : ?>
+                                                <div class="type-tools">
+                                                    <h4><?php esc_html_e( 'Best Tools', 'aichatbotfree' ); ?></h4>
+                                                    <ul class="type-tools-list">
+                                                        <?php foreach ( $tools as $tool ) :
+                                                            $tool_name = isset( $tool['tool_name'] ) ? $tool['tool_name'] : '';
+                                                            $tool_link = isset( $tool['tool_link'] ) ? $tool['tool_link'] : '';
+                                                            ?>
+                                                            <li>
+                                                                <?php if ( $tool_link ) : ?>
+                                                                    <a href="<?php echo esc_url( $tool_link ); ?>" target="_blank" rel="nofollow noopener"><?php echo esc_html( $tool_name ); ?></a>
+                                                                <?php else : ?>
+                                                                    <?php echo esc_html( $tool_name ); ?>
+                                                                <?php endif; ?>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
 
-                        <?php if ( ! empty( $tools_listing ) ) : ?>
-                            <div class="best-tools-table-wrapper">
-                                <table class="best-tools-table" aria-label="<?php esc_attr_e( 'Best Tools', 'aichatbotfree' ); ?>">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col"><?php esc_html_e( 'Best Tools', 'aichatbotfree' ); ?></th>
-                                            <th scope="col"><?php esc_html_e( 'Visit', 'aichatbotfree' ); ?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ( $tools_listing as $tool ) : ?>
-                                            <tr>
-                                                <td><?php echo esc_html( $tool['name'] ); ?></td>
-                                                <td>
-                                                    <?php if ( ! empty( $tool['link'] ) ) : ?>
-                                                        <a href="<?php echo esc_url( $tool['link'] ); ?>" target="_blank" rel="nofollow noopener"><?php esc_html_e( 'Visit', 'aichatbotfree' ); ?></a>
-                                                    <?php else : ?>
-                                                        <?php esc_html_e( 'Visit', 'aichatbotfree' ); ?>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                        <?php if ( ! empty( $best_tools ) ) : ?>
+                            <div class="chatbot-best-tools">
+                                <div class="best-tools-header">
+                                    <h3><?php esc_html_e( 'Best Tools', 'aichatbotfree' ); ?></h3>
+                                </div>
+                                <div class="best-tools-grid">
+                                    <?php foreach ( $best_tools as $tool ) :
+                                        $tool_name = isset( $tool['tool_name'] ) ? $tool['tool_name'] : '';
+                                        $tool_link = isset( $tool['tool_link'] ) ? $tool['tool_link'] : '';
+                                        if ( ! $tool_name ) {
+                                            continue;
+                                        }
+                                        ?>
+                                        <div class="best-tools-cell">
+                                            <span class="tool-name"><?php echo esc_html( $tool_name ); ?></span>
+                                            <?php if ( $tool_link ) : ?>
+                                                <a href="<?php echo esc_url( $tool_link ); ?>" target="_blank" rel="nofollow noopener"><?php esc_html_e( 'Visit', 'aichatbotfree' ); ?></a>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -633,6 +632,49 @@ if ( $faq_schema_json ) :
                 panel.classList.remove('is-open');
                 panel.style.maxHeight = '0px';
             }
+        });
+    });
+})();
+
+(function(){
+    const typeAccordions = document.querySelectorAll('.chatbot-type-accordion');
+    if (!typeAccordions.length) return;
+
+    typeAccordions.forEach(function(group){
+        const items = group.querySelectorAll('.chatbot-type-accordion-item');
+
+        items.forEach(function(item){
+            const header = item.querySelector('.chatbot-type-accordion-header');
+            const body   = item.querySelector('.chatbot-type-accordion-body');
+            if (!header || !body) return;
+
+            body.style.maxHeight = '0px';
+
+            header.addEventListener('click', function(){
+                const isOpen = item.classList.contains('open');
+
+                items.forEach(function(other){
+                    const otherHeader = other.querySelector('.chatbot-type-accordion-header');
+                    const otherBody   = other.querySelector('.chatbot-type-accordion-body');
+                    if (otherHeader) {
+                        otherHeader.setAttribute('aria-expanded', 'false');
+                    }
+                    if (otherBody) {
+                        otherBody.style.maxHeight = '0px';
+                    }
+                    other.classList.remove('open');
+                });
+
+                if (!isOpen) {
+                    item.classList.add('open');
+                    header.setAttribute('aria-expanded', 'true');
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                } else {
+                    item.classList.remove('open');
+                    header.setAttribute('aria-expanded', 'false');
+                    body.style.maxHeight = '0px';
+                }
+            });
         });
     });
 })();

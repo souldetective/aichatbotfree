@@ -169,6 +169,22 @@
                             "type": "text"
                         },
                         {
+                            "key": "field_type_bg_color",
+                            "label": "Section Background",
+                            "name": "type_bg_color",
+                            "type": "color_picker",
+                            "instructions": "Background color for the chatbot types block.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_type_font_color",
+                            "label": "Section Text Color",
+                            "name": "type_font_color",
+                            "type": "color_picker",
+                            "instructions": "Text color for the chatbot types block.",
+                            "return_format": "string"
+                        },
+                        {
                             "key": "field_type_items",
                             "label": "Type Items",
                             "name": "type_items",
@@ -243,20 +259,25 @@
                             ]
                         },
                         {
-                            "key": "field_type_bg_color",
-                            "label": "Section Background",
-                            "name": "type_bg_color",
-                            "type": "color_picker",
-                            "instructions": "Background color for the chatbot types block.",
-                            "return_format": "string"
-                        },
-                        {
-                            "key": "field_type_font_color",
-                            "label": "Section Text Color",
-                            "name": "type_font_color",
-                            "type": "color_picker",
-                            "instructions": "Text color for the chatbot types block.",
-                            "return_format": "string"
+                            "key": "field_type_best_tools",
+                            "label": "Best Tools",
+                            "name": "best_tools",
+                            "type": "repeater",
+                            "button_label": "Add Tool",
+                            "sub_fields": [
+                                {
+                                    "key": "field_type_best_tool_name",
+                                    "label": "Tool Name",
+                                    "name": "tool_name",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "field_type_best_tool_link",
+                                    "label": "Tool Link",
+                                    "name": "tool_link",
+                                    "type": "url"
+                                }
+                            ]
                         }
                     ]
                 },
