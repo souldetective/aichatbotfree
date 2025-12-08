@@ -360,39 +360,39 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 break;
 
             case 'how_it_works':
-                $steps = get_sub_field( 'work_steps' );
-                $image = get_sub_field( 'work_image' );
-                if ( empty( $steps ) && ! $image ) {
+                $how_title = get_sub_field( 'how_it_works_title' );
+                $steps     = get_sub_field( 'how_it_works_steps' );
+
+                if ( empty( $how_title ) && empty( $steps ) ) {
                     break;
                 }
                 ?>
                 <section class="article-section how-it-works"<?php echo aichatbotfree_article_section_style_attr(); ?>>
-                    <div class="how-it-works__grid">
-                        <div class="how-it-works__steps">
-                            <?php if ( $steps ) : ?>
-                                <ol>
-                                    <?php foreach ( $steps as $step ) :
-                                        $step_title = isset( $step['step_title'] ) ? $step['step_title'] : '';
-                                        $step_desc  = isset( $step['step_desc'] ) ? $step['step_desc'] : '';
-                                        ?>
-                                        <li>
-                                            <?php if ( $step_title ) : ?>
-                                                <h3><?php echo esc_html( $step_title ); ?></h3>
-                                            <?php endif; ?>
-                                            <?php if ( $step_desc ) : ?>
-                                                <p><?php echo esc_html( $step_desc ); ?></p>
-                                            <?php endif; ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ol>
-                            <?php endif; ?>
-                        </div>
-                        <?php if ( $image ) :
-                            $img_url = isset( $image['url'] ) ? $image['url'] : '';
-                            $img_alt = isset( $image['alt'] ) ? $image['alt'] : '';
-                            ?>
-                            <div class="how-it-works__image">
-                                <img src="<?php echo esc_url( $img_url ); ?>" alt="<?php echo esc_attr( $img_alt ); ?>" />
+                    <div class="how-it-works__inner">
+                        <?php if ( $how_title ) : ?>
+                            <h2 class="how-it-works__title"><?php echo esc_html( $how_title ); ?></h2>
+                        <?php endif; ?>
+
+                        <?php if ( $steps ) : ?>
+                            <div class="how-it-works__steps">
+                                <?php
+                                $step_index = 1;
+                                foreach ( $steps as $step ) :
+                                    $step_desc = isset( $step['step_description'] ) ? $step['step_description'] : '';
+
+                                    if ( ! $step_desc ) {
+                                        $step_index++;
+                                        continue;
+                                    }
+                                    ?>
+                                    <div class="how-it-works__step">
+                                        <div class="how-it-works__step-number" aria-hidden="true"><?php echo esc_html( $step_index ); ?></div>
+                                        <div class="how-it-works__step-body"><?php echo wp_kses_post( $step_desc ); ?></div>
+                                    </div>
+                                    <?php
+                                    $step_index++;
+                                endforeach;
+                                ?>
                             </div>
                         <?php endif; ?>
                     </div>

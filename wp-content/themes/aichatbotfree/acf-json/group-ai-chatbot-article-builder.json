@@ -373,35 +373,25 @@
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_work_steps",
+                            "key": "field_how_it_works_title",
+                            "label": "Section Title",
+                            "name": "how_it_works_title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_how_it_works_steps",
                             "label": "Steps",
-                            "name": "work_steps",
+                            "name": "how_it_works_steps",
                             "type": "repeater",
                             "button_label": "Add Step",
                             "sub_fields": [
                                 {
-                                    "key": "field_step_title",
-                                    "label": "Step Title",
-                                    "name": "step_title",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "field_step_desc",
+                                    "key": "field_how_it_works_step_description",
                                     "label": "Step Description",
-                                    "name": "step_desc",
-                                    "type": "textarea",
-                                    "new_lines": "br"
+                                    "name": "step_description",
+                                    "type": "wysiwyg"
                                 }
                             ]
-                        },
-                        {
-                            "key": "field_work_image",
-                            "label": "Illustration",
-                            "name": "work_image",
-                            "type": "image",
-                            "return_format": "array",
-                            "preview_size": "medium",
-                            "library": "all"
                         },
                         {
                             "key": "field_how_it_works_section_background",
