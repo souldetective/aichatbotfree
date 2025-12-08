@@ -801,6 +801,16 @@ if ( function_exists( 'acf_add_local_field_group' ) ) {
             ],
         ]
     );
+
+    $article_builder_path = get_template_directory() . '/acf-json/group-ai-chatbot-article-builder.json';
+
+    if ( file_exists( $article_builder_path ) ) {
+        $article_builder = json_decode( file_get_contents( $article_builder_path ), true );
+
+        if ( is_array( $article_builder ) && isset( $article_builder['key'] ) ) {
+            acf_add_local_field_group( $article_builder );
+        }
+    }
 }
 
 /**

@@ -67,6 +67,83 @@
                     ]
                 },
                 {
+                    "key": "layout_featured_grid",
+                    "name": "featured_grid",
+                    "label": "Featured Grid",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_featured_overall_title",
+                            "label": "Overall Title",
+                            "name": "featured_overall_title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_featured_icon",
+                            "label": "Featured Icon",
+                            "name": "featured_icon",
+                            "type": "image",
+                            "return_format": "array",
+                            "preview_size": "thumbnail"
+                        },
+                        {
+                            "key": "field_featured_description",
+                            "label": "Featured Description",
+                            "name": "featured_description",
+                            "type": "wysiwyg",
+                            "toolbar": "basic",
+                            "media_upload": 0
+                        },
+                        {
+                            "key": "field_featured_cards",
+                            "label": "Featured Cards",
+                            "name": "featured_cards",
+                            "type": "repeater",
+                            "button_label": "Add Card",
+                            "sub_fields": [
+                                {
+                                    "key": "field_featured_card_icon",
+                                    "label": "Card Icon",
+                                    "name": "card_icon",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "thumbnail"
+                                },
+                                {
+                                    "key": "field_featured_card_title",
+                                    "label": "Card Title",
+                                    "name": "card_title",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "field_featured_card_description",
+                                    "label": "Card Description",
+                                    "name": "card_description",
+                                    "type": "wysiwyg",
+                                    "toolbar": "basic",
+                                    "media_upload": 0
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_featured_section_background",
+                            "label": "Section Background",
+                            "name": "section_background",
+                            "type": "color_picker",
+                            "instructions": "Override the background for this module.",
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_featured_section_text_color",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "color_picker",
+                            "instructions": "Override the text color for this module.",
+                            "return_format": "string"
+                        }
+                    ]
+                },
+                {
                     "key": "layout_at_a_glance",
                     "name": "at_a_glance",
                     "label": "At a Glance",
@@ -118,6 +195,12 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_icon_grid_title",
+                            "label": "Icon Grid Title",
+                            "name": "icon_grid_title",
+                            "type": "text"
+                        },
+                        {
                             "key": "field_icon_items",
                             "label": "Icon Items",
                             "name": "icon_items",
@@ -125,15 +208,17 @@
                             "button_label": "Add Icon",
                             "sub_fields": [
                                 {
-                                    "key": "field_icon_class",
-                                    "label": "Icon Class",
-                                    "name": "icon_class",
-                                    "type": "text"
+                                    "key": "field_icon_image",
+                                    "label": "Icon Image",
+                                    "name": "icon_image",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "thumbnail"
                                 },
                                 {
-                                    "key": "field_icon_text",
-                                    "label": "Icon Text",
-                                    "name": "icon_text",
+                                    "key": "field_icon_label",
+                                    "label": "Icon Label",
+                                    "name": "icon_label",
                                     "type": "text"
                                 }
                             ]
@@ -465,33 +550,47 @@
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_industry_items",
-                            "label": "Industry Items",
-                            "name": "industry_items",
+                            "key": "field_industry_overall_title",
+                            "label": "Section Title",
+                            "name": "industry_overall_title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_industry_description",
+                            "label": "Section Description",
+                            "name": "industry_description",
+                            "type": "wysiwyg",
+                            "toolbar": "basic",
+                            "media_upload": 0
+                        },
+                        {
+                            "key": "field_industry_cards_group",
+                            "label": "Industry Cards",
+                            "name": "industry_cards_group",
                             "type": "repeater",
-                            "button_label": "Add Industry",
+                            "button_label": "Add Industry Card",
                             "sub_fields": [
                                 {
-                                    "key": "field_industry_title",
+                                    "key": "field_industry_card_icon",
+                                    "label": "Industry Icon",
+                                    "name": "industry_icon",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "thumbnail"
+                                },
+                                {
+                                    "key": "field_industry_card_title",
                                     "label": "Industry Title",
                                     "name": "industry_title",
                                     "type": "text"
                                 },
                                 {
-                                    "key": "field_industry_desc",
+                                    "key": "field_industry_card_description",
                                     "label": "Industry Description",
-                                    "name": "industry_desc",
-                                    "type": "textarea",
-                                    "new_lines": "br"
-                                },
-                                {
-                                    "key": "field_industry_icon",
-                                    "label": "Industry Icon",
-                                    "name": "industry_icon",
-                                    "type": "image",
-                                    "return_format": "array",
-                                    "preview_size": "medium",
-                                    "library": "all"
+                                    "name": "industry_description_card",
+                                    "type": "wysiwyg",
+                                    "toolbar": "basic",
+                                    "media_upload": 0
                                 }
                             ]
                         },

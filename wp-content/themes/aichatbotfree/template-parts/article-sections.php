@@ -82,6 +82,61 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 <?php
                 break;
 
+            case 'featured_grid':
+                $featured_title       = get_sub_field( 'featured_overall_title' );
+                $featured_icon        = get_sub_field( 'featured_icon' );
+                $featured_description = get_sub_field( 'featured_description' );
+                $featured_cards       = get_sub_field( 'featured_cards' );
+
+                if ( ! $featured_title && ! $featured_icon && ! $featured_description && empty( $featured_cards ) ) {
+                    break;
+                }
+                ?>
+                <section class="article-section featured-grid"<?php echo aichatbotfree_article_section_style_attr(); ?>>
+                    <div class="featured-grid__header">
+                        <?php if ( $featured_icon && isset( $featured_icon['ID'] ) ) : ?>
+                            <div class="featured-grid__icon" aria-hidden="true">
+                                <?php echo wp_get_attachment_image( $featured_icon['ID'], 'thumbnail' ); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ( $featured_title ) : ?>
+                            <h2 class="featured-grid__title"><?php echo esc_html( $featured_title ); ?></h2>
+                        <?php endif; ?>
+                        <?php if ( $featured_description ) : ?>
+                            <div class="featured-grid__description"><?php echo wp_kses_post( $featured_description ); ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ( ! empty( $featured_cards ) ) : ?>
+                        <div class="featured-grid__cards">
+                            <?php foreach ( $featured_cards as $card ) :
+                                $card_icon        = isset( $card['card_icon']['ID'] ) ? $card['card_icon']['ID'] : null;
+                                $card_title       = isset( $card['card_title'] ) ? $card['card_title'] : '';
+                                $card_description = isset( $card['card_description'] ) ? $card['card_description'] : '';
+
+                                if ( ! $card_icon && ! $card_title && ! $card_description ) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="featured-card">
+                                    <?php if ( $card_icon ) : ?>
+                                        <div class="featured-card__icon" aria-hidden="true">
+                                            <?php echo wp_get_attachment_image( $card_icon, 'thumbnail' ); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ( $card_title ) : ?>
+                                        <h3 class="featured-card__title"><?php echo esc_html( $card_title ); ?></h3>
+                                    <?php endif; ?>
+                                    <?php if ( $card_description ) : ?>
+                                        <div class="featured-card__description"><?php echo wp_kses_post( $card_description ); ?></div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </section>
+                <?php
+                break;
+
             case 'at_a_glance':
                 $items = get_sub_field( 'glance_items' );
                 if ( empty( $items ) ) {
@@ -112,27 +167,40 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 break;
 
             case 'icon_grid':
-                $icons = get_sub_field( 'icon_items' );
-                if ( empty( $icons ) ) {
+                $icon_grid_title = get_sub_field( 'icon_grid_title' );
+                $icons           = get_sub_field( 'icon_items' );
+
+                if ( ! $icon_grid_title && empty( $icons ) ) {
                     break;
                 }
                 ?>
                 <section class="article-section icon-grid"<?php echo aichatbotfree_article_section_style_attr(); ?>>
-                    <div class="icon-grid__items">
-                        <?php foreach ( $icons as $icon ) :
-                            $class = isset( $icon['icon_class'] ) ? $icon['icon_class'] : '';
-                            $text  = isset( $icon['icon_text'] ) ? $icon['icon_text'] : '';
-                            ?>
-                            <div class="icon-grid__item">
-                                <?php if ( $class ) : ?>
-                                    <span class="icon-grid__icon <?php echo esc_attr( $class ); ?>" aria-hidden="true"></span>
-                                <?php endif; ?>
-                                <?php if ( $text ) : ?>
-                                    <span class="icon-grid__text"><?php echo esc_html( $text ); ?></span>
-                                <?php endif; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <?php if ( $icon_grid_title ) : ?>
+                        <div class="section-heading">
+                            <h2><?php echo esc_html( $icon_grid_title ); ?></h2>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ( ! empty( $icons ) ) : ?>
+                        <div class="icon-grid__items">
+                            <?php foreach ( $icons as $icon ) :
+                                $image = isset( $icon['icon_image']['ID'] ) ? $icon['icon_image']['ID'] : null;
+                                $text  = isset( $icon['icon_label'] ) ? $icon['icon_label'] : '';
+
+                                if ( ! $image && ! $text ) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="icon-grid__item">
+                                    <?php if ( $image ) : ?>
+                                        <div class="icon-grid__icon" aria-hidden="true"><?php echo wp_get_attachment_image( $image, 'thumbnail' ); ?></div>
+                                    <?php endif; ?>
+                                    <?php if ( $text ) : ?>
+                                        <span class="icon-grid__text"><?php echo esc_html( $text ); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </section>
                 <?php
                 break;
@@ -414,33 +482,52 @@ if ( ! function_exists( 'aichatbotfree_article_section_style_attr' ) ) {
                 break;
 
             case 'industry_cards':
-                $industries = get_sub_field( 'industry_items' );
-                if ( empty( $industries ) ) {
+                $industry_title       = get_sub_field( 'industry_overall_title' );
+                $industry_description = get_sub_field( 'industry_description' );
+                $industries           = get_sub_field( 'industry_cards_group' );
+
+                if ( ! $industry_title && ! $industry_description && empty( $industries ) ) {
                     break;
                 }
                 ?>
                 <section class="article-section industry-cards"<?php echo aichatbotfree_article_section_style_attr(); ?>>
-                    <div class="industry-grid">
-                        <?php foreach ( $industries as $industry ) :
-                            $title = isset( $industry['industry_title'] ) ? $industry['industry_title'] : '';
-                            $desc  = isset( $industry['industry_desc'] ) ? $industry['industry_desc'] : '';
-                            $icon  = isset( $industry['industry_icon'] ) ? $industry['industry_icon'] : '';
-                            ?>
-                            <div class="industry-card">
-                                <?php if ( $icon && isset( $icon['url'] ) ) : ?>
-                                    <div class="industry-card__icon" aria-hidden="true">
-                                        <img src="<?php echo esc_url( $icon['url'] ); ?>" alt="<?php echo esc_attr( $icon['alt'] ); ?>" />
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ( $title ) : ?>
-                                    <h3><?php echo esc_html( $title ); ?></h3>
-                                <?php endif; ?>
-                                <?php if ( $desc ) : ?>
-                                    <p><?php echo esc_html( $desc ); ?></p>
-                                <?php endif; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <?php if ( $industry_title || $industry_description ) : ?>
+                        <div class="section-heading">
+                            <?php if ( $industry_title ) : ?>
+                                <h2><?php echo esc_html( $industry_title ); ?></h2>
+                            <?php endif; ?>
+                            <?php if ( $industry_description ) : ?>
+                                <div class="section-description"><?php echo wp_kses_post( $industry_description ); ?></div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ( ! empty( $industries ) ) : ?>
+                        <div class="industry-grid">
+                            <?php foreach ( $industries as $industry ) :
+                                $title = isset( $industry['industry_title'] ) ? $industry['industry_title'] : '';
+                                $desc  = isset( $industry['industry_description_card'] ) ? $industry['industry_description_card'] : '';
+                                $icon  = isset( $industry['industry_icon']['ID'] ) ? $industry['industry_icon']['ID'] : null;
+
+                                if ( ! $title && ! $desc && ! $icon ) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="industry-card">
+                                    <?php if ( $icon ) : ?>
+                                        <div class="industry-card__icon" aria-hidden="true">
+                                            <?php echo wp_get_attachment_image( $icon, 'medium' ); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ( $title ) : ?>
+                                        <h3><?php echo esc_html( $title ); ?></h3>
+                                    <?php endif; ?>
+                                    <?php if ( $desc ) : ?>
+                                        <div class="industry-card__description"><?php echo wp_kses_post( $desc ); ?></div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </section>
                 <?php
                 break;
