@@ -23,20 +23,6 @@ add_action( 'after_setup_theme', function () {
     );
 });
 
-add_action( 'widgets_init', function () {
-    register_sidebar(
-        [
-            'name'          => __( 'Primary Sidebar', 'aichatbotfree' ),
-            'id'            => 'primary-sidebar',
-            'description'   => __( 'Add widgets here to appear in the sidebar on single posts.', 'aichatbotfree' ),
-            'before_widget' => '<section id="%1$s" class="widget %2$s">',
-            'after_widget'  => '</section>',
-            'before_title'  => '<h3 class="widget-title">',
-            'after_title'   => '</h3>',
-        ]
-    );
-} );
-
 add_action( 'wp_enqueue_scripts', function () {
     wp_enqueue_style( 'aichatbotfree-style', get_stylesheet_uri(), [], AI_CHATBOTFREE_VERSION );
     wp_enqueue_style( 'aichatbotfree-main', get_template_directory_uri() . '/assets/css/main.css', [], AI_CHATBOTFREE_VERSION );
